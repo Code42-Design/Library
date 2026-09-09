@@ -11,21 +11,23 @@
       --shelf-plank: linear-gradient(180deg, #f8a5c2 0%, #f78fb3 100%);
       --shelf-shadow: rgba(247, 143, 179, 0.4);
       --text-main: #4a235a;
-      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.92);
       --accent-color: #ec407a;
       --laser-color: #ff1744;
+      --plank-text: #fff;
     }
 
-    /* Cute Theme Presets */
+    /* 6 Aesthetic Theme Presets */
     body.theme-kawaii {
       --bg-wallpaper: radial-gradient(circle, #ffe6f0 20%, #ffccee 100%);
       --shelf-backboard: linear-gradient(180deg, #fff0f6 0%, #ffd6e8 100%);
       --shelf-plank: linear-gradient(180deg, #ff9ebb 0%, #ff6b8b 100%);
       --shelf-shadow: rgba(255, 107, 139, 0.4);
       --text-main: #5c2c3b;
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.93);
       --accent-color: #ff477e;
       --laser-color: #ff0055;
+      --plank-text: #fff0f5;
     }
 
     body.theme-cottagecore {
@@ -34,9 +36,10 @@
       --shelf-plank: linear-gradient(180deg, #a1887f 0%, #8d6e63 100%);
       --shelf-shadow: rgba(141, 110, 99, 0.5);
       --text-main: #2e4600;
-      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.92);
       --accent-color: #558b2f;
       --laser-color: #76ff03;
+      --plank-text: #f1f8e9;
     }
 
     body.theme-celestial {
@@ -45,9 +48,10 @@
       --shelf-plank: linear-gradient(180deg, #7c4dff 0%, #651fff 100%);
       --shelf-shadow: rgba(124, 77, 255, 0.6);
       --text-main: #e8eaf6;
-      --card-bg: rgba(26, 28, 75, 0.85);
+      --card-bg: rgba(26, 28, 75, 0.88);
       --accent-color: #b388ff;
       --laser-color: #00e5ff;
+      --plank-text: #e8eaf6;
     }
 
     body.theme-synthwave {
@@ -56,9 +60,10 @@
       --shelf-plank: linear-gradient(180deg, #f72585 0%, #7209b7 100%);
       --shelf-shadow: rgba(247, 37, 133, 0.6);
       --text-main: #4cc9f0;
-      --card-bg: rgba(36, 0, 70, 0.9);
+      --card-bg: rgba(36, 0, 70, 0.92);
       --accent-color: #f72585;
       --laser-color: #4cc9f0;
+      --plank-text: #4cc9f0;
     }
 
     body.theme-mocha {
@@ -70,6 +75,19 @@
       --card-bg: rgba(255, 255, 255, 0.95);
       --accent-color: #8d6e63;
       --laser-color: #ff6d00;
+      --plank-text: #efebe9;
+    }
+
+    body.theme-enchanted {
+      --bg-wallpaper: linear-gradient(135deg, #004d40 0%, #00251a 100%);
+      --shelf-backboard: linear-gradient(180deg, #00695c 0%, #00332c 100%);
+      --shelf-plank: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
+      --shelf-shadow: rgba(46, 125, 50, 0.5);
+      --text-main: #e0f2f1;
+      --card-bg: rgba(0, 77, 64, 0.9);
+      --accent-color: #80cbc4;
+      --laser-color: #69f0ae;
+      --plank-text: #e0f2f1;
     }
 
     body {
@@ -90,24 +108,24 @@
       align-items: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     h1 {
       margin: 0;
       font-size: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
 
     .controls-bar {
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
       align-items: center;
     }
 
-    select, button {
-      padding: 0.6rem 1.2rem;
+    select, button, input {
+      padding: 0.6rem 1rem;
       border-radius: 20px;
       border: none;
       font-weight: 600;
@@ -134,22 +152,21 @@
       padding: 0 1rem;
     }
 
-    /* Dynamic Shelf Styling */
+    /* Shelves & Categories */
+    .shelves-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
     .shelf-container {
       background: var(--shelf-backboard);
       border-radius: 16px;
-      padding: 2rem;
+      padding: 1.5rem 2rem 0 2rem;
       box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 10px 30px var(--shelf-shadow);
-      margin-bottom: 3rem;
       transition: all 0.5s ease;
       position: relative;
-    }
-
-    .shelf-title {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      font-weight: 700;
-      opacity: 0.9;
     }
 
     .books-row {
@@ -157,81 +174,81 @@
       align-items: flex-end;
       gap: 15px;
       min-height: 180px;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
+      overflow-x: auto;
     }
 
     .book-spine {
-      width: 40px;
+      width: 42px;
       height: 160px;
-      border-radius: 4px 8px 8px 4px;
+      border-radius: 3px 6px 6px 3px;
       display: flex;
       align-items: center;
       justify-content: center;
       writing-mode: vertical-rl;
       color: #fff;
       font-weight: bold;
-      font-size: 0.9rem;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      font-size: 0.85rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: -3px 0 5px rgba(0,0,0,0.2), inset -2px 0 5px rgba(255,255,255,0.3);
+      box-shadow: -3px 0 6px rgba(0,0,0,0.3), inset -2px 0 5px rgba(255,255,255,0.3);
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
     }
 
     .book-spine:hover {
-      transform: translateY(-10px) scale(1.05);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform: translateY(-12px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
     }
 
+    /* Printed Physical Shelf Plank */
     .shelf-plank {
-      height: 18px;
+      height: 32px;
       background: var(--shelf-plank);
       border-radius: 4px;
       box-shadow: 0 8px 15px var(--shelf-shadow);
-      margin-top: -5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: -2rem;
+      margin-right: -2rem;
+      position: relative;
     }
 
-    /* Barcode Scanner Section */
+    .shelf-label-printed {
+      color: var(--plank-text);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+      opacity: 0.9;
+    }
+
+    /* Scanner UI */
     .scanner-card {
       background: var(--card-bg);
       border-radius: 16px;
       padding: 1.5rem;
       box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-      backdrop-filter: blur(10px);
     }
 
-    .viewfinder {
-      width: 100%;
-      height: 180px;
-      background: #111;
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
+    .input-group {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
+      gap: 10rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
 
-    .laser-line {
-      position: absolute;
-      width: 100%;
-      height: 3px;
-      background: var(--laser-color);
-      box-shadow: 0 0 10px var(--laser-color);
-      animation: scan 2s infinite ease-in-out;
-    }
-
-    @keyframes scan {
-      0% { top: 10%; }
-      50% { top: 90%; }
-      100% { top: 10%; }
-    }
-
-    /* Modal for 3D Viewer */
+    /* Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.65);
       display: none;
       align-items: center;
       justify-content: center;
@@ -242,23 +259,19 @@
       background: var(--card-bg);
       padding: 2rem;
       border-radius: 20px;
-      max-width: 400px;
+      max-width: 420px;
       width: 90%;
       text-align: center;
     }
 
-    .book-3d-preview {
+    .cover-preview {
       width: 140px;
-      height: 200px;
-      margin: 1.5rem auto;
+      height: 210px;
+      margin: 1rem auto;
       border-radius: 8px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: bold;
-      font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      background-size: cover;
+      background-position: center;
     }
   </style>
 </head>
@@ -273,52 +286,48 @@
         <option value="theme-celestial">✨ Celestial Galaxy</option>
         <option value="theme-synthwave">🔮 Neon Synthwave</option>
         <option value="theme-mocha">☕ Cozy Mocha Nook</option>
+        <option value="theme-enchanted">🍄 Enchanted Forest</option>
       </select>
-      <button class="btn-primary" onclick="runDemo()">⚡ Demo in Action</button>
+      <button class="btn-primary" onclick="addCategoryShelf()">➕ Add Category Shelf</button>
     </div>
   </header>
 
   <main>
-    <div class="shelf-container">
-      <div class="shelf-title">📚 Currently Reading & Favorites</div>
-      <div class="books-row" id="shelfRow">
-        <div class="book-spine" style="background: #ff758c;" onclick="openBook('The Great Gatsby', '#ff758c')">The Great Gatsby</div>
-        <div class="book-spine" style="background: #4ecdc4;" onclick="openBook('Atomic Habits', '#4ecdc4')">Atomic Habits</div>
-        <div class="book-spine" style="background: #ffe66d; color: #333;" onclick="openBook('Dune', '#ffe66d')">Dune</div>
+    <div class="shelves-wrapper" id="shelvesWrapper">
+      <!-- Default Category Shelves -->
+      <div class="shelf-container">
+        <div class="books-row" id="shelf-favorites"></div>
+        <div class="shelf-plank">
+          <span class="shelf-label-printed">★ Currently Reading & Favorites ★</span>
+        </div>
       </div>
-      <div class="shelf-plank"></div>
     </div>
 
     <div class="scanner-card">
-      <h3>📷 Virtual Camera Barcode Scanner</h3>
-      <div class="viewfinder">
-        <div class="laser-line"></div>
-        <span id="scannerStatus">Scanning for barcodes...</span>
-      </div>
-      <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-        <button onclick="simulateScan()">⚡ Simulate Barcode Scan</button>
-        <span id="scanOutput" style="font-weight: bold;"></span>
+      <h3>🔍 Add Book by ISBN / Scanner</h3>
+      <p style="font-size: 0.9rem; opacity: 0.8;">Enter any 10 or 13 digit ISBN (e.g., 9780141439518 or 0439708184)</p>
+      <div class="input-group">
+        <input type="text" id="isbnInput" placeholder="Enter ISBN (e.g. 9780141439518)" style="flex: 1;" />
+        <select id="targetShelfSelect"></select>
+        <button class="btn-primary" onclick="fetchAndAddBook()">Fetch & Add Book</button>
       </div>
     </div>
   </main>
 
   <div class="modal-overlay" id="bookModal">
     <div class="modal-card">
-      <h2 id="modalTitle">Book Title</h2>
-      <div class="book-3d-preview" id="modalBookPreview">Cover</div>
-      <p>3D Interactive Inspector Active</p>
-      <button onclick="closeModal()">Close</button>
+      <h2 id="modalTitle" style="margin: 0;">Book Title</h2>
+      <p id="modalAuthor" style="opacity: 0.8; margin-top: 5px;">Author</p>
+      <div class="cover-preview" id="modalCover"></div>
+      <button onclick="closeModal()" style="margin-top: 1rem;">Close</button>
     </div>
   </div>
 
   <script>
-    // Web Audio Sound Engine
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playSound(type) {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain);
@@ -343,54 +352,113 @@
       playSound('slide');
     }
 
-    function openBook(title, color) {
+    function updateShelfDropdown() {
+      const select = document.getElementById('targetShelfSelect');
+      select.innerHTML = '';
+      document.querySelectorAll('.shelf-container').forEach((shelf, idx) => {
+        const label = shelf.querySelector('.shelf-label-printed').innerText;
+        const opt = document.createElement('option');
+        opt.value = shelf.querySelector('.books-row').id;
+        opt.innerText = label;
+        select.appendChild(opt);
+      });
+    }
+
+    function addCategoryShelf() {
+      const name = prompt("Enter new shelf category name:", "Fantasy & Sci-Fi");
+      if (!name) return;
+
+      const wrapper = document.getElementById('shelvesWrapper');
+      const shelfId = 'shelf-' + Date.now();
+
+      const container = document.createElement('div');
+      container.className = 'shelf-container';
+      container.innerHTML = `
+        <div class="books-row" id="${shelfId}"></div>
+        <div class="shelf-plank">
+          <span class="shelf-label-printed">${name.toUpperCase()}</span>
+        </div>
+      `;
+      wrapper.appendChild(container);
+      updateShelfDropdown();
       playSound('slide');
-      document.getElementById('modalTitle').innerText = title;
-      const preview = document.getElementById('modalBookPreview');
-      preview.style.background = color;
-      preview.innerText = title;
-      document.getElementById('bookModal').style.display = 'flex';
+    }
+
+    async function fetchAndAddBook() {
+      const input = document.getElementById('isbnInput');
+      const isbn = input.value.trim().replace(/[- ]/g, '');
+      const targetShelfId = document.getElementById('targetShelfSelect').value;
+
+      if (!isbn) {
+        alert("Please enter an ISBN number!");
+        return;
+      }
+
+      playSound('beep');
+
+      try {
+        const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+        const data = await res.json();
+        const bookData = data[`ISBN:${isbn}`];
+
+        let title = "Unknown Title";
+        let author = "Unknown Author";
+        let coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
+
+        if (bookData) {
+          title = bookData.title || title;
+          if (bookData.authors && bookData.authors.length > 0) {
+            author = bookData.authors[0].name;
+          }
+          if (bookData.cover && bookData.cover.medium) {
+            coverUrl = bookData.cover.medium;
+          }
+        }
+
+        addBookToShelf(targetShelfId, title, author, coverUrl);
+        input.value = '';
+      } catch (err) {
+        alert("Could not fetch book details. Adding fallback spine.");
+        addBookToShelf(targetShelfId, `ISBN: ${isbn}`, "Unknown", `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`);
+      }
+    }
+
+    function addBookToShelf(shelfId, title, author, coverUrl) {
+      const targetRow = document.getElementById(shelfId);
+      const colors = ['#e63946', '#457b9d', '#2a9d8f', '#e76f51', '#9c27b0', '#673ab7'];
+      const randomBg = colors[Math.floor(Math.random() * colors.length)];
+
+      const spine = document.createElement('div');
+      spine.className = 'book-spine';
+      spine.style.backgroundColor = randomBg;
+      spine.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${coverUrl}')`;
+      spine.innerText = title;
+
+      spine.onclick = () => {
+        playSound('slide');
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalAuthor').innerText = `By ${author}`;
+        const coverDiv = document.getElementById('modalCover');
+        coverDiv.style.backgroundImage = `url('${coverUrl}')`;
+        coverDiv.style.backgroundColor = randomBg;
+        document.getElementById('bookModal').style.display = 'flex';
+      };
+
+      targetRow.appendChild(spine);
+      playSound('slide');
     }
 
     function closeModal() {
       document.getElementById('bookModal').style.display = 'none';
     }
 
-    function simulateScan() {
-      playSound('beep');
-      const scannerStatus = document.getElementById('scannerStatus');
-      const scanOutput = document.getElementById('scanOutput');
-      
-      scannerStatus.innerText = "🟢 Barcode Detected: 978-0-123456-78-9";
-      scanOutput.innerText = "Adding 'Project Hail Mary' to shelf...";
-
-      setTimeout(() => {
-        const shelf = document.getElementById('shelfRow');
-        const newBook = document.createElement('div');
-        newBook.className = 'book-spine';
-        newBook.style.background = '#6c5ce7';
-        newBook.innerText = 'Project Hail Mary';
-        newBook.onclick = () => openBook('Project Hail Mary', '#6c5ce7');
-        shelf.appendChild(newBook);
-        playSound('slide');
-        scannerStatus.innerText = "Scanning for barcodes...";
-        scanOutput.innerText = "Book added!";
-      }, 1200);
-    }
-
-    function runDemo() {
-      const themes = ['theme-kawaii', 'theme-cottagecore', 'theme-celestial', 'theme-synthwave', 'theme-mocha'];
-      let idx = 0;
-      const interval = setInterval(() => {
-        document.getElementById('themeSelect').value = themes[idx];
-        changeTheme(themes[idx]);
-        idx++;
-        if (idx >= themes.length) {
-          clearInterval(interval);
-          simulateScan();
-        }
-      }, 800);
-    }
+    // Initialize Default Books
+    window.onload = () => {
+      updateShelfDropdown();
+      // Pre-load default classics using ISBNs
+      addBookToShelf('shelf-favorites', 'Pride & Prejudice', 'Jane Austen', 'https://covers.openlibrary.org/b/isbn/9780141439518-M.jpg');
+      addBookToShelf('shelf-favorites', 'Harry Potter', 'J.K. Rowling', 'https://covers.openlibrary.org/b/isbn/0439708184-M.jpg');
+    };
   </script>
 </body>
 </html>
