@@ -3,462 +3,300 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumina Library</title>
+  <title>Lumina Library - Interactive Drag & Drop Bookshelf</title>
   <style>
     :root {
-      --bg-wallpaper: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%);
-      --shelf-backboard: linear-gradient(180deg, #fff0f5 0%, #ffe4e1 100%);
-      --shelf-plank: linear-gradient(180deg, #f8a5c2 0%, #f78fb3 100%);
-      --shelf-shadow: rgba(247, 143, 179, 0.4);
-      --text-main: #4a235a;
-      --card-bg: rgba(255, 255, 255, 0.92);
-      --accent-color: #ec407a;
-      --laser-color: #ff1744;
-      --plank-text: #fff;
+      --bg-color: #121318;
+      --card-bg: #1e2029;
+      --shelf-wood: #2c1d11;
+      --shelf-wood-top: #422a18;
+      --accent: #d4a373;
+      --accent-light: #fefae0;
+      --text: #e0e0e0;
+      --text-muted: #a0a0a0;
     }
 
-    /* 6 Aesthetic Theme Presets */
-    body.theme-kawaii {
-      --bg-wallpaper: radial-gradient(circle, #ffe6f0 20%, #ffccee 100%);
-      --shelf-backboard: linear-gradient(180deg, #fff0f6 0%, #ffd6e8 100%);
-      --shelf-plank: linear-gradient(180deg, #ff9ebb 0%, #ff6b8b 100%);
-      --shelf-shadow: rgba(255, 107, 139, 0.4);
-      --text-main: #5c2c3b;
-      --card-bg: rgba(255, 255, 255, 0.93);
-      --accent-color: #ff477e;
-      --laser-color: #ff0055;
-      --plank-text: #fff0f5;
-    }
-
-    body.theme-cottagecore {
-      --bg-wallpaper: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-      --shelf-backboard: linear-gradient(180deg, #f1f8e9 0%, #ded2a8 100%);
-      --shelf-plank: linear-gradient(180deg, #a1887f 0%, #8d6e63 100%);
-      --shelf-shadow: rgba(141, 110, 99, 0.5);
-      --text-main: #2e4600;
-      --card-bg: rgba(255, 255, 255, 0.92);
-      --accent-color: #558b2f;
-      --laser-color: #76ff03;
-      --plank-text: #f1f8e9;
-    }
-
-    body.theme-celestial {
-      --bg-wallpaper: radial-gradient(circle, #1a237e 0%, #0d47a1 50%, #000051 100%);
-      --shelf-backboard: linear-gradient(180deg, #101432 0%, #1a1c4b 100%);
-      --shelf-plank: linear-gradient(180deg, #7c4dff 0%, #651fff 100%);
-      --shelf-shadow: rgba(124, 77, 255, 0.6);
-      --text-main: #e8eaf6;
-      --card-bg: rgba(26, 28, 75, 0.88);
-      --accent-color: #b388ff;
-      --laser-color: #00e5ff;
-      --plank-text: #e8eaf6;
-    }
-
-    body.theme-synthwave {
-      --bg-wallpaper: linear-gradient(180deg, #240046 0%, #10002b 100%);
-      --shelf-backboard: linear-gradient(180deg, #3c096c 0%, #240046 100%);
-      --shelf-plank: linear-gradient(180deg, #f72585 0%, #7209b7 100%);
-      --shelf-shadow: rgba(247, 37, 133, 0.6);
-      --text-main: #4cc9f0;
-      --card-bg: rgba(36, 0, 70, 0.92);
-      --accent-color: #f72585;
-      --laser-color: #4cc9f0;
-      --plank-text: #4cc9f0;
-    }
-
-    body.theme-mocha {
-      --bg-wallpaper: linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%);
-      --shelf-backboard: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
-      --shelf-plank: linear-gradient(180deg, #6d4c41 0%, #4e342e 100%);
-      --shelf-shadow: rgba(78, 52, 46, 0.5);
-      --text-main: #3e2723;
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --accent-color: #8d6e63;
-      --laser-color: #ff6d00;
-      --plank-text: #efebe9;
-    }
-
-    body.theme-enchanted {
-      --bg-wallpaper: linear-gradient(135deg, #004d40 0%, #00251a 100%);
-      --shelf-backboard: linear-gradient(180deg, #00695c 0%, #00332c 100%);
-      --shelf-plank: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
-      --shelf-shadow: rgba(46, 125, 50, 0.5);
-      --text-main: #e0f2f1;
-      --card-bg: rgba(0, 77, 64, 0.9);
-      --accent-color: #80cbc4;
-      --laser-color: #69f0ae;
-      --plank-text: #e0f2f1;
-    }
-
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg-wallpaper);
-      color: var(--text-main);
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
       min-height: 100vh;
-      transition: background 0.5s ease;
+      padding: 2rem;
     }
 
     header {
-      background: var(--card-bg);
-      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 1rem;
     }
 
     h1 {
-      margin: 0;
       font-size: 1.8rem;
+      color: var(--accent);
+      letter-spacing: 1px;
     }
 
-    .controls-bar {
+    .controls {
       display: flex;
-      gap: 0.8rem;
-      align-items: center;
+      gap: 1rem;
     }
 
-    select, button, input {
-      padding: 0.6rem 1rem;
-      border-radius: 20px;
+    button {
+      background: var(--accent);
+      color: #000;
       border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      background: var(--card-bg);
-      color: var(--text-main);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    button.btn-primary {
-      background: var(--accent-color);
-      color: #fff;
+      transition: opacity 0.2s;
     }
 
     button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      opacity: 0.9;
     }
 
-    main {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    /* Shelves & Categories */
-    .shelves-wrapper {
+    .shelves-container {
       display: flex;
       flex-direction: column;
-      gap: 2.5rem;
-      margin-bottom: 3rem;
+      gap: 3rem;
     }
 
-    .shelf-container {
-      background: var(--shelf-backboard);
-      border-radius: 16px;
-      padding: 1.5rem 2rem 0 2rem;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 10px 30px var(--shelf-shadow);
-      transition: all 0.5s ease;
-      position: relative;
+    .shelf {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+
+    .shelf-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .shelf-title {
+      font-size: 1.2rem;
+      color: var(--accent-light);
     }
 
     .books-row {
       display: flex;
+      gap: 1.2rem;
       align-items: flex-end;
-      gap: 15px;
       min-height: 180px;
-      padding-bottom: 5px;
+      padding: 1rem 0.5rem;
+      background: linear-gradient(to bottom, transparent 88%, var(--shelf-wood-top) 88%, var(--shelf-wood) 100%);
+      border-bottom: 12px solid var(--shelf-wood);
       overflow-x: auto;
     }
 
-    .book-spine {
-      width: 42px;
+    .books-row.drag-over {
+      background: rgba(212, 163, 115, 0.1);
+      border-color: var(--accent);
+    }
+
+    .book {
+      width: 110px;
       height: 160px;
-      border-radius: 3px 6px 6px 3px;
+      border-radius: 4px 8px 8px 4px;
+      padding: 0.8rem;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      writing-mode: vertical-rl;
-      color: #fff;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: grab;
+      user-select: none;
+      box-shadow: -4px 4px 10px rgba(0,0,0,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .book:active {
+      cursor: grabbing;
+    }
+
+    .book.dragging {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+
+    .book-title {
+      font-size: 0.85rem;
       font-weight: bold;
-      font-size: 0.85rem;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: -3px 0 6px rgba(0,0,0,0.3), inset -2px 0 5px rgba(255,255,255,0.3);
-      background-size: cover;
-      background-position: center;
-      flex-shrink: 0;
-      position: relative;
+      color: #fff;
+      line-height: 1.2;
       overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
 
-    .book-spine:hover {
-      transform: translateY(-12px) scale(1.05);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+    .book-author {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.8);
     }
 
-    /* Printed Physical Shelf Plank */
-    .shelf-plank {
-      height: 32px;
-      background: var(--shelf-plank);
-      border-radius: 4px;
-      box-shadow: 0 8px 15px var(--shelf-shadow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: -2rem;
-      margin-right: -2rem;
-      position: relative;
-    }
-
-    .shelf-label-printed {
-      color: var(--plank-text);
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-      opacity: 0.9;
-    }
-
-    /* Scanner UI */
-    .scanner-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    }
-
-    .input-group {
-      display: flex;
-      gap: 10rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.65);
+    .book-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
       display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
     }
 
-    .modal-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 20px;
-      max-width: 420px;
-      width: 90%;
-      text-align: center;
+    .book:hover .book-actions {
+      display: block;
     }
 
-    .cover-preview {
-      width: 140px;
-      height: 210px;
-      margin: 1rem auto;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      background-size: cover;
-      background-position: center;
+    .action-btn {
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.7rem;
     }
   </style>
 </head>
-<body class="theme-kawaii">
+<body>
 
   <header>
-    <h1>🌸 Lumina Library</h1>
-    <div class="controls-bar">
-      <select id="themeSelect" onchange="changeTheme(this.value)">
-        <option value="theme-kawaii">🌸 Kawaii Pastel Dream</option>
-        <option value="theme-cottagecore">🌿 Cottagecore Garden</option>
-        <option value="theme-celestial">✨ Celestial Galaxy</option>
-        <option value="theme-synthwave">🔮 Neon Synthwave</option>
-        <option value="theme-mocha">☕ Cozy Mocha Nook</option>
-        <option value="theme-enchanted">🍄 Enchanted Forest</option>
-      </select>
-      <button class="btn-primary" onclick="addCategoryShelf()">➕ Add Category Shelf</button>
+    <h1>Lumina Library</h1>
+    <div class="controls">
+      <button onclick="addSampleBook()">+ Add Book</button>
     </div>
   </header>
 
-  <main>
-    <div class="shelves-wrapper" id="shelvesWrapper">
-      <!-- Default Category Shelves -->
-      <div class="shelf-container">
-        <div class="books-row" id="shelf-favorites"></div>
-        <div class="shelf-plank">
-          <span class="shelf-label-printed">★ Currently Reading & Favorites ★</span>
-        </div>
+  <div class="shelves-container">
+    <div class="shelf">
+      <div class="shelf-header">
+        <span class="shelf-title">📖 Currently Reading</span>
       </div>
+      <div class="books-row" id="shelf-reading" data-shelf="reading" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
     </div>
 
-    <div class="scanner-card">
-      <h3>🔍 Add Book by ISBN / Scanner</h3>
-      <p style="font-size: 0.9rem; opacity: 0.8;">Enter any 10 or 13 digit ISBN (e.g., 9780141439518 or 0439708184)</p>
-      <div class="input-group">
-        <input type="text" id="isbnInput" placeholder="Enter ISBN (e.g. 9780141439518)" style="flex: 1;" />
-        <select id="targetShelfSelect"></select>
-        <button class="btn-primary" onclick="fetchAndAddBook()">Fetch & Add Book</button>
+    <div class="shelf">
+      <div class="shelf-header">
+        <span class="shelf-title">✨ Want to Read</span>
       </div>
+      <div class="books-row" id="shelf-wishlist" data-shelf="wishlist" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
     </div>
-  </main>
 
-  <div class="modal-overlay" id="bookModal">
-    <div class="modal-card">
-      <h2 id="modalTitle" style="margin: 0;">Book Title</h2>
-      <p id="modalAuthor" style="opacity: 0.8; margin-top: 5px;">Author</p>
-      <div class="cover-preview" id="modalCover"></div>
-      <button onclick="closeModal()" style="margin-top: 1rem;">Close</button>
+    <div class="shelf">
+      <div class="shelf-header">
+        <span class="shelf-title">✅ Finished</span>
+      </div>
+      <div class="books-row" id="shelf-completed" data-shelf="completed" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
     </div>
   </div>
 
   <script>
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let books = [
+      { id: '1', title: 'Dune', author: 'Frank Herbert', shelf: 'reading', color: '#2b4c3f' },
+      { id: '2', title: '1984', author: 'George Orwell', shelf: 'reading', color: '#7a2e2e' },
+      { id: '3', title: 'The Hobbit', author: 'J.R.R. Tolkien', shelf: 'wishlist', color: '#3a5a78' },
+      { id: '4', title: 'Foundation', author: 'Isaac Asimov', shelf: 'completed', color: '#5a3a78' }
+    ];
 
-    function playSound(type) {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+    let draggedBookId = null;
 
-      if (type === 'beep') {
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
-      } else if (type === 'slide') {
-        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.2);
-      }
-    }
+    function renderBooks() {
+      ['reading', 'wishlist', 'completed'].forEach(shelfKey => {
+        const row = document.getElementById(`shelf-${shelfKey}`);
+        row.innerHTML = '';
+        
+        books.filter(b => b.shelf === shelfKey).forEach(book => {
+          const el = document.createElement('div');
+          el.className = 'book';
+          el.style.backgroundColor = book.color;
+          el.draggable = true;
+          el.dataset.id = book.id;
 
-    function changeTheme(themeName) {
-      document.body.className = themeName;
-      playSound('slide');
-    }
+          el.innerHTML = `
+            <div class="book-title">${book.title}</div>
+            <div class="book-author">${book.author}</div>
+            <div class="book-actions">
+              <button class="action-btn" onclick="removeBook('${book.id}')">✕</button>
+            </div>
+          `;
 
-    function updateShelfDropdown() {
-      const select = document.getElementById('targetShelfSelect');
-      select.innerHTML = '';
-      document.querySelectorAll('.shelf-container').forEach((shelf, idx) => {
-        const label = shelf.querySelector('.shelf-label-printed').innerText;
-        const opt = document.createElement('option');
-        opt.value = shelf.querySelector('.books-row').id;
-        opt.innerText = label;
-        select.appendChild(opt);
+          el.addEventListener('dragstart', handleDragStart);
+          el.addEventListener('dragend', handleDragEnd);
+
+          row.appendChild(el);
+        });
       });
     }
 
-    function addCategoryShelf() {
-      const name = prompt("Enter new shelf category name:", "Fantasy & Sci-Fi");
-      if (!name) return;
-
-      const wrapper = document.getElementById('shelvesWrapper');
-      const shelfId = 'shelf-' + Date.now();
-
-      const container = document.createElement('div');
-      container.className = 'shelf-container';
-      container.innerHTML = `
-        <div class="books-row" id="${shelfId}"></div>
-        <div class="shelf-plank">
-          <span class="shelf-label-printed">${name.toUpperCase()}</span>
-        </div>
-      `;
-      wrapper.appendChild(container);
-      updateShelfDropdown();
-      playSound('slide');
+    function handleDragStart(e) {
+      draggedBookId = this.dataset.id;
+      this.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', draggedBookId);
     }
 
-    async function fetchAndAddBook() {
-      const input = document.getElementById('isbnInput');
-      const isbn = input.value.trim().replace(/[- ]/g, '');
-      const targetShelfId = document.getElementById('targetShelfSelect').value;
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+      draggedBookId = null;
+    }
 
-      if (!isbn) {
-        alert("Please enter an ISBN number!");
-        return;
-      }
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
 
-      playSound('beep');
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
 
-      try {
-        const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
-        const data = await res.json();
-        const bookData = data[`ISBN:${isbn}`];
+    function handleDrop(e) {
+      e.preventDefault();
+      const row = e.currentTarget;
+      row.classList.remove('drag-over');
 
-        let title = "Unknown Title";
-        let author = "Unknown Author";
-        let coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
+      const newShelf = row.dataset.shelf;
+      const book = books.find(b => b.id === draggedBookId);
 
-        if (bookData) {
-          title = bookData.title || title;
-          if (bookData.authors && bookData.authors.length > 0) {
-            author = bookData.authors[0].name;
-          }
-          if (bookData.cover && bookData.cover.medium) {
-            coverUrl = bookData.cover.medium;
-          }
-        }
-
-        addBookToShelf(targetShelfId, title, author, coverUrl);
-        input.value = '';
-      } catch (err) {
-        alert("Could not fetch book details. Adding fallback spine.");
-        addBookToShelf(targetShelfId, `ISBN: ${isbn}`, "Unknown", `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`);
+      if (book) {
+        book.shelf = newShelf;
+        renderBooks();
       }
     }
 
-    function addBookToShelf(shelfId, title, author, coverUrl) {
-      const targetRow = document.getElementById(shelfId);
-      const colors = ['#e63946', '#457b9d', '#2a9d8f', '#e76f51', '#9c27b0', '#673ab7'];
-      const randomBg = colors[Math.floor(Math.random() * colors.length)];
+    function addSampleBook() {
+      const titles = ['Neuromancer', 'Hyperion', 'Snow Crash', 'Project Hail Mary'];
+      const authors = ['William Gibson', 'Dan Simmons', 'Neal Stephenson', 'Andy Weir'];
+      const colors = ['#8c5221', '#21688c', '#62218c', '#218c5d'];
+      
+      const idx = Math.floor(Math.random() * titles.length);
+      
+      books.push({
+        id: Date.now().toString(),
+        title: titles[idx],
+        author: authors[idx],
+        shelf: 'wishlist',
+        color: colors[idx]
+      });
 
-      const spine = document.createElement('div');
-      spine.className = 'book-spine';
-      spine.style.backgroundColor = randomBg;
-      spine.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${coverUrl}')`;
-      spine.innerText = title;
-
-      spine.onclick = () => {
-        playSound('slide');
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalAuthor').innerText = `By ${author}`;
-        const coverDiv = document.getElementById('modalCover');
-        coverDiv.style.backgroundImage = `url('${coverUrl}')`;
-        coverDiv.style.backgroundColor = randomBg;
-        document.getElementById('bookModal').style.display = 'flex';
-      };
-
-      targetRow.appendChild(spine);
-      playSound('slide');
+      renderBooks();
     }
 
-    function closeModal() {
-      document.getElementById('bookModal').style.display = 'none';
+    function removeBook(id) {
+      books = books.filter(b => b.id !== id);
+      renderBooks();
     }
 
-    // Initialize Default Books
-    window.onload = () => {
-      updateShelfDropdown();
-      // Pre-load default classics using ISBNs
-      addBookToShelf('shelf-favorites', 'Pride & Prejudice', 'Jane Austen', 'https://covers.openlibrary.org/b/isbn/9780141439518-M.jpg');
-      addBookToShelf('shelf-favorites', 'Harry Potter', 'J.K. Rowling', 'https://covers.openlibrary.org/b/isbn/0439708184-M.jpg');
-    };
+    // Initial Render
+    renderBooks();
   </script>
 </body>
 </html>
