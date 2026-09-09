@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Library</title>
+  <style>
+    :root {
+      --bg-wallpaper: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%);
+      --shelf-backboard: linear-gradient(180deg, #fff0f5 0%, #ffe4e1 100%);
+      --shelf-plank: linear-gradient(180deg, #f8a5c2 0%, #f78fb3 100%);
+      --shelf-shadow: rgba(247, 143, 179, 0.4);
+      --text-main: #4a235a;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --accent-color: #ec407a;
+      --laser-color: #ff1744;
+    }
+
+    /* Cute Theme Presets */
+    body.theme-kawaii {
+      --bg-wallpaper: radial-gradient(circle, #ffe6f0 20%, #ffccee 100%);
+      --shelf-backboard: linear-gradient(180deg, #fff0f6 0%, #ffd6e8 100%);
+      --shelf-plank: linear-gradient(180deg, #ff9ebb 0%, #ff6b8b 100%);
+      --shelf-shadow: rgba(255, 107, 139, 0.4);
+      --text-main: #5c2c3b;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --accent-color: #ff477e;
+      --laser-color: #ff0055;
+    }
+
+    body.theme-cottagecore {
+      --bg-wallpaper: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      --shelf-backboard: linear-gradient(180deg, #f1f8e9 0%, #ded2a8 100%);
+      --shelf-plank: linear-gradient(180deg, #a1887f 0%, #8d6e63 100%);
+      --shelf-shadow: rgba(141, 110, 99, 0.5);
+      --text-main: #2e4600;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --accent-color: #558b2f;
+      --laser-color: #76ff03;
+    }
+
+    body.theme-celestial {
+      --bg-wallpaper: radial-gradient(circle, #1a237e 0%, #0d47a1 50%, #000051 100%);
+      --shelf-backboard: linear-gradient(180deg, #101432 0%, #1a1c4b 100%);
+      --shelf-plank: linear-gradient(180deg, #7c4dff 0%, #651fff 100%);
+      --shelf-shadow: rgba(124, 77, 255, 0.6);
+      --text-main: #e8eaf6;
+      --card-bg: rgba(26, 28, 75, 0.85);
+      --accent-color: #b388ff;
+      --laser-color: #00e5ff;
+    }
+
+    body.theme-synthwave {
+      --bg-wallpaper: linear-gradient(180deg, #240046 0%, #10002b 100%);
+      --shelf-backboard: linear-gradient(180deg, #3c096c 0%, #240046 100%);
+      --shelf-plank: linear-gradient(180deg, #f72585 0%, #7209b7 100%);
+      --shelf-shadow: rgba(247, 37, 133, 0.6);
+      --text-main: #4cc9f0;
+      --card-bg: rgba(36, 0, 70, 0.9);
+      --accent-color: #f72585;
+      --laser-color: #4cc9f0;
+    }
+
+    body.theme-mocha {
+      --bg-wallpaper: linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%);
+      --shelf-backboard: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
+      --shelf-plank: linear-gradient(180deg, #6d4c41 0%, #4e342e 100%);
+      --shelf-shadow: rgba(78, 52, 46, 0.5);
+      --text-main: #3e2723;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --accent-color: #8d6e63;
+      --laser-color: #ff6d00;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-wallpaper);
+      color: var(--text-main);
+      min-height: 100vh;
+      transition: background 0.5s ease;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .controls-bar {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    select, button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    button.btn-primary {
+      background: var(--accent-color);
+      color: #fff;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Dynamic Shelf Styling */
+    .shelf-container {
+      background: var(--shelf-backboard);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 10px 30px var(--shelf-shadow);
+      margin-bottom: 3rem;
+      transition: all 0.5s ease;
+      position: relative;
+    }
+
+    .shelf-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .books-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 15px;
+      min-height: 180px;
+      padding-bottom: 10px;
+    }
+
+    .book-spine {
+      width: 40px;
+      height: 160px;
+      border-radius: 4px 8px 8px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: -3px 0 5px rgba(0,0,0,0.2), inset -2px 0 5px rgba(255,255,255,0.3);
+    }
+
+    .book-spine:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .shelf-plank {
+      height: 18px;
+      background: var(--shelf-plank);
+      border-radius: 4px;
+      box-shadow: 0 8px 15px var(--shelf-shadow);
+      margin-top: -5px;
+    }
+
+    /* Barcode Scanner Section */
+    .scanner-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .viewfinder {
+      width: 100%;
+      height: 180px;
+      background: #111;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .laser-line {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background: var(--laser-color);
+      box-shadow: 0 0 10px var(--laser-color);
+      animation: scan 2s infinite ease-in-out;
+    }
+
+    @keyframes scan {
+      0% { top: 10%; }
+      50% { top: 90%; }
+      100% { top: 10%; }
+    }
+
+    /* Modal for 3D Viewer */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .book-3d-preview {
+      width: 140px;
+      height: 200px;
+      margin: 1.5rem auto;
+      border-radius: 8px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body class="theme-kawaii">
+
+  <header>
+    <h1>🌸 Lumina Library</h1>
+    <div class="controls-bar">
+      <select id="themeSelect" onchange="changeTheme(this.value)">
+        <option value="theme-kawaii">🌸 Kawaii Pastel Dream</option>
+        <option value="theme-cottagecore">🌿 Cottagecore Garden</option>
+        <option value="theme-celestial">✨ Celestial Galaxy</option>
+        <option value="theme-synthwave">🔮 Neon Synthwave</option>
+        <option value="theme-mocha">☕ Cozy Mocha Nook</option>
+      </select>
+      <button class="btn-primary" onclick="runDemo()">⚡ Demo in Action</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="shelf-container">
+      <div class="shelf-title">📚 Currently Reading & Favorites</div>
+      <div class="books-row" id="shelfRow">
+        <div class="book-spine" style="background: #ff758c;" onclick="openBook('The Great Gatsby', '#ff758c')">The Great Gatsby</div>
+        <div class="book-spine" style="background: #4ecdc4;" onclick="openBook('Atomic Habits', '#4ecdc4')">Atomic Habits</div>
+        <div class="book-spine" style="background: #ffe66d; color: #333;" onclick="openBook('Dune', '#ffe66d')">Dune</div>
+      </div>
+      <div class="shelf-plank"></div>
+    </div>
+
+    <div class="scanner-card">
+      <h3>📷 Virtual Camera Barcode Scanner</h3>
+      <div class="viewfinder">
+        <div class="laser-line"></div>
+        <span id="scannerStatus">Scanning for barcodes...</span>
+      </div>
+      <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <button onclick="simulateScan()">⚡ Simulate Barcode Scan</button>
+        <span id="scanOutput" style="font-weight: bold;"></span>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="bookModal">
+    <div class="modal-card">
+      <h2 id="modalTitle">Book Title</h2>
+      <div class="book-3d-preview" id="modalBookPreview">Cover</div>
+      <p>3D Interactive Inspector Active</p>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Web Audio Sound Engine
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'beep') {
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } else if (type === 'slide') {
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.2);
+      }
+    }
+
+    function changeTheme(themeName) {
+      document.body.className = themeName;
+      playSound('slide');
+    }
+
+    function openBook(title, color) {
+      playSound('slide');
+      document.getElementById('modalTitle').innerText = title;
+      const preview = document.getElementById('modalBookPreview');
+      preview.style.background = color;
+      preview.innerText = title;
+      document.getElementById('bookModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('bookModal').style.display = 'none';
+    }
+
+    function simulateScan() {
+      playSound('beep');
+      const scannerStatus = document.getElementById('scannerStatus');
+      const scanOutput = document.getElementById('scanOutput');
+      
+      scannerStatus.innerText = "🟢 Barcode Detected: 978-0-123456-78-9";
+      scanOutput.innerText = "Adding 'Project Hail Mary' to shelf...";
+
+      setTimeout(() => {
+        const shelf = document.getElementById('shelfRow');
+        const newBook = document.createElement('div');
+        newBook.className = 'book-spine';
+        newBook.style.background = '#6c5ce7';
+        newBook.innerText = 'Project Hail Mary';
+        newBook.onclick = () => openBook('Project Hail Mary', '#6c5ce7');
+        shelf.appendChild(newBook);
+        playSound('slide');
+        scannerStatus.innerText = "Scanning for barcodes...";
+        scanOutput.innerText = "Book added!";
+      }, 1200);
+    }
+
+    function runDemo() {
+      const themes = ['theme-kawaii', 'theme-cottagecore', 'theme-celestial', 'theme-synthwave', 'theme-mocha'];
+      let idx = 0;
+      const interval = setInterval(() => {
+        document.getElementById('themeSelect').value = themes[idx];
+        changeTheme(themes[idx]);
+        idx++;
+        if (idx >= themes.length) {
+          clearInterval(interval);
+          simulateScan();
+        }
+      }, 800);
+    }
+  </script>
+</body>
+</html>
