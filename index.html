@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumina Library - Interactive Drag & Drop Bookshelf</title>
+  <title>Lumina Library</title>
   <style>
     :root {
       --bg-color: #121318;
-      --card-bg: #1e2029;
+      --panel-bg: #1e2029;
       --shelf-wood: #2c1d11;
       --shelf-wood-top: #422a18;
       --accent: #d4a373;
       --accent-light: #fefae0;
       --text: #e0e0e0;
       --text-muted: #a0a0a0;
+      --border: #333644;
     }
 
     * {
@@ -32,11 +33,19 @@
 
     header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
       margin-bottom: 2rem;
-      border-bottom: 1px solid #333;
-      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
     h1 {
@@ -47,62 +56,123 @@
 
     .controls {
       display: flex;
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
 
     button {
       background: var(--accent);
-      color: #000;
+      color: #121318;
       border: none;
       padding: 0.6rem 1.2rem;
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
     button:hover {
       opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover {
+      background: var(--panel-bg);
+      border-color: var(--accent);
+    }
+
+    .view-toggle {
+      display: flex;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .view-toggle button {
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 0;
+      padding: 0.6rem 1rem;
+    }
+
+    .view-toggle button.active {
+      background: var(--accent);
+      color: #121318;
     }
 
     .shelves-container {
       display: flex;
       flex-direction: column;
-      gap: 3rem;
+      gap: 2.5rem;
     }
 
     .shelf {
-      background: var(--card-bg);
+      background: var(--panel-bg);
       border-radius: 8px;
       padding: 1.5rem;
       box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
     }
 
     .shelf-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 1rem;
     }
 
     .shelf-title {
       font-size: 1.2rem;
+      font-weight: 600;
       color: var(--accent-light);
     }
 
+    .book-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+    }
+
+    /* 3D Shelf Display */
     .books-row {
       display: flex;
       gap: 1.2rem;
       align-items: flex-end;
-      min-height: 180px;
-      padding: 1rem 0.5rem;
+      min-height: 200px;
+      padding: 1.5rem 1rem 0.5rem 1rem;
       background: linear-gradient(to bottom, transparent 88%, var(--shelf-wood-top) 88%, var(--shelf-wood) 100%);
       border-bottom: 12px solid var(--shelf-wood);
       overflow-x: auto;
+      transition: background 0.2s;
     }
 
     .books-row.drag-over {
-      background: rgba(212, 163, 115, 0.1);
-      border-color: var(--accent);
+      background: rgba(212, 163, 115, 0.15);
+      outline: 2px dashed var(--accent);
+      outline-offset: -4px;
+    }
+
+    /* Compact Grid View Mode */
+    .shelves-container.grid-mode .books-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 1.5rem;
+      background: none;
+      border-bottom: none;
+      min-height: auto;
+      padding: 1rem 0;
     }
 
     .book {
@@ -116,8 +186,19 @@
       cursor: grab;
       user-select: none;
       box-shadow: -4px 4px 10px rgba(0,0,0,0.5);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
       position: relative;
+      flex-shrink: 0;
+    }
+
+    .shelves-container.grid-mode .book {
+      width: 100%;
+      height: 180px;
+    }
+
+    .book:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: -6px 8px 15px rgba(0,0,0,0.6);
     }
 
     .book:active {
@@ -125,62 +206,201 @@
     }
 
     .book.dragging {
-      opacity: 0.4;
+      opacity: 0.3;
       transform: scale(0.95);
     }
 
     .book-title {
       font-size: 0.85rem;
-      font-weight: bold;
-      color: #fff;
-      line-height: 1.2;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
     }
 
     .book-author {
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.85);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .book-progress {
+      height: 4px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+
+    .book-progress-fill {
+      height: 100%;
+      background: var(--accent-light);
     }
 
     .book-actions {
       position: absolute;
-      top: 5px;
-      right: 5px;
-      display: none;
+      top: 6px;
+      right: 6px;
+      display: opacity;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
 
     .book:hover .book-actions {
-      display: block;
+      opacity: 1;
     }
 
     .action-btn {
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.7);
       color: #fff;
       border: none;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-btn:hover {
+      background: #e63946;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header h3 {
+      color: var(--accent-light);
+    }
+
+    .close-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      font-size: 1.2rem;
+      padding: 0;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      color: var(--text-muted);
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.618rem;
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--accent);
+    }
+
+    /* Barcode Simulator */
+    .scanner-viewport {
+      height: 140px;
+      background: #000;
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      border: 1px dashed var(--accent);
+    }
+
+    .laser {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #ff3b30;
+      box-shadow: 0 0 8px #ff3b30;
+      animation: scan 1.8s infinite ease-in-out;
+    }
+
+    @keyframes scan {
+      0% { top: 10%; }
+      50% { top: 90%; }
+      100% { top: 10%; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Lumina Library</h1>
+    <div class="brand">
+      <h1>📚 Lumina Library</h1>
+    </div>
     <div class="controls">
-      <button onclick="addSampleBook()">+ Add Book</button>
+      <div class="view-toggle">
+        <button id="view-shelf-btn" class="active" onclick="setViewMode('shelf')">Shelf</button>
+        <button id="view-grid-btn" onclick="setViewMode('grid')">Grid</button>
+      </div>
+      <button class="secondary" onclick="openScannerModal()">📷 Scan ISBN</button>
+      <button onclick="openAddModal()">+ Add Book</button>
     </div>
   </header>
 
-  <div class="shelves-container">
+  <main class="shelves-container" id="shelves-container">
     <div class="shelf">
       <div class="shelf-header">
         <span class="shelf-title">📖 Currently Reading</span>
+        <span class="book-count" id="count-reading">0 books</span>
       </div>
       <div class="books-row" id="shelf-reading" data-shelf="reading" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
     </div>
@@ -188,6 +408,7 @@
     <div class="shelf">
       <div class="shelf-header">
         <span class="shelf-title">✨ Want to Read</span>
+        <span class="book-count" id="count-wishlist">0 books</span>
       </div>
       <div class="books-row" id="shelf-wishlist" data-shelf="wishlist" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
     </div>
@@ -195,27 +416,112 @@
     <div class="shelf">
       <div class="shelf-header">
         <span class="shelf-title">✅ Finished</span>
+        <span class="book-count" id="count-completed">0 books</span>
       </div>
       <div class="books-row" id="shelf-completed" data-shelf="completed" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
+    </div>
+  </main>
+
+  <!-- Add Book Modal -->
+  <div class="modal-overlay" id="add-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add New Book</h3>
+        <button class="close-btn" onclick="closeAddModal()">✕</button>
+      </div>
+      <form id="add-book-form" onsubmit="handleAddBook(event)">
+        <div class="form-group">
+          <label for="book-title">Title</label>
+          <input type="text" id="book-title" required placeholder="e.g., The Great Gatsby">
+        </div>
+        <div class="form-group">
+          <label for="book-author">Author</label>
+          <input type="text" id="book-author" required placeholder="e.g., F. Scott Fitzgerald">
+        </div>
+        <div class="form-group">
+          <label for="book-shelf">Shelf</label>
+          <select id="book-shelf">
+            <option value="reading">Currently Reading</option>
+            <option value="wishlist" selected>Want to Read</option>
+            <option value="completed">Finished</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="book-color">Spine/Cover Color</label>
+          <select id="book-color">
+            <option value="#2b4c3f">Emerald Green</option>
+            <option value="#7a2e2e">Crimson Red</option>
+            <option value="#3a5a78">Deep Blue</option>
+            <option value="#5a3a78">Royal Purple</option>
+            <option value="#8c5221">Amber Brown</option>
+          </select>
+        </div>
+        <button type="submit" style="width: 100%; justify-content: center; margin-top: 1rem;">Save to Library</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Barcode Scanner Simulator Modal -->
+  <div class="modal-overlay" id="scanner-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Scan ISBN Barcode</h3>
+        <button class="close-btn" onclick="closeScannerModal()">✕</button>
+      </div>
+      <div class="scanner-viewport">
+        <div class="laser"></div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); z-index: 1;">Position ISBN within frame</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; text-align: center;">Simulating barcode lookup from ISBN database...</p>
+      <button onclick="simulateScan()" style="width: 100%; justify-content: center;">Simulate Random ISBN Scan</button>
     </div>
   </div>
 
   <script>
-    let books = [
-      { id: '1', title: 'Dune', author: 'Frank Herbert', shelf: 'reading', color: '#2b4c3f' },
-      { id: '2', title: '1984', author: 'George Orwell', shelf: 'reading', color: '#7a2e2e' },
-      { id: '3', title: 'The Hobbit', author: 'J.R.R. Tolkien', shelf: 'wishlist', color: '#3a5a78' },
-      { id: '4', title: 'Foundation', author: 'Isaac Asimov', shelf: 'completed', color: '#5a3a78' }
+    const STORAGE_KEY = 'lumina_library_data';
+
+    const defaultBooks = [
+      { id: '1', title: 'Dune', author: 'Frank Herbert', shelf: 'reading', color: '#2b4c3f', progress: 65 },
+      { id: '2', title: '1984', author: 'George Orwell', shelf: 'reading', color: '#7a2e2e', progress: 30 },
+      { id: '3', title: 'The Hobbit', author: 'J.R.R. Tolkien', shelf: 'wishlist', color: '#3a5a78', progress: 0 },
+      { id: '4', title: 'Foundation', author: 'Isaac Asimov', shelf: 'completed', color: '#5a3a78', progress: 100 }
     ];
 
+    let books = [];
     let draggedBookId = null;
 
+    // Initialize Library Data
+    function initLibrary() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          books = JSON.parse(saved);
+        } catch(e) {
+          books = [...defaultBooks];
+        }
+      } else {
+        books = [...defaultBooks];
+      }
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+      renderBooks();
+    }
+
     function renderBooks() {
-      ['reading', 'wishlist', 'completed'].forEach(shelfKey => {
+      const shelves = ['reading', 'wishlist', 'completed'];
+      
+      shelves.forEach(shelfKey => {
         const row = document.getElementById(`shelf-${shelfKey}`);
+        const countSpan = document.getElementById(`count-${shelfKey}`);
+        const shelfBooks = books.filter(b => b.shelf === shelfKey);
+
         row.innerHTML = '';
-        
-        books.filter(b => b.shelf === shelfKey).forEach(book => {
+        countSpan.textContent = `${shelfBooks.length} ${shelfBooks.length === 1 ? 'book' : 'books'}`;
+
+        shelfBooks.forEach(book => {
           const el = document.createElement('div');
           el.className = 'book';
           el.style.backgroundColor = book.color;
@@ -223,10 +529,15 @@
           el.dataset.id = book.id;
 
           el.innerHTML = `
-            <div class="book-title">${book.title}</div>
-            <div class="book-author">${book.author}</div>
+            <div>
+              <div class="book-title">${escapeHtml(book.title)}</div>
+              <div class="book-author">${escapeHtml(book.author)}</div>
+            </div>
+            <div>
+              ${book.progress ? `<div class="book-progress"><div class="book-progress-fill" style="width: ${book.progress}%"></div></div>` : ''}
+            </div>
             <div class="book-actions">
-              <button class="action-btn" onclick="removeBook('${book.id}')">✕</button>
+              <button class="action-btn" onclick="removeBook('${book.id}', event)" title="Remove book">✕</button>
             </div>
           `;
 
@@ -238,19 +549,23 @@
       });
     }
 
+    // Drag and Drop Logic
     function handleDragStart(e) {
       draggedBookId = this.dataset.id;
       this.classList.add('dragging');
       e.dataTransfer.setData('text/plain', draggedBookId);
+      e.dataTransfer.effectAllowed = 'move';
     }
 
     function handleDragEnd() {
       this.classList.remove('dragging');
       draggedBookId = null;
+      document.querySelectorAll('.books-row').forEach(row => row.classList.remove('drag-over'));
     }
 
     function handleDragOver(e) {
       e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
       e.currentTarget.classList.add('drag-over');
     }
 
@@ -263,40 +578,107 @@
       const row = e.currentTarget;
       row.classList.remove('drag-over');
 
-      const newShelf = row.dataset.shelf;
+      const targetShelf = row.dataset.shelf;
       const book = books.find(b => b.id === draggedBookId);
 
       if (book) {
-        book.shelf = newShelf;
-        renderBooks();
+        book.shelf = targetShelf;
+        saveAndRender();
       }
     }
 
-    function addSampleBook() {
-      const titles = ['Neuromancer', 'Hyperion', 'Snow Crash', 'Project Hail Mary'];
-      const authors = ['William Gibson', 'Dan Simmons', 'Neal Stephenson', 'Andy Weir'];
-      const colors = ['#8c5221', '#21688c', '#62218c', '#218c5d'];
-      
-      const idx = Math.floor(Math.random() * titles.length);
+    // View Switcher
+    function setViewMode(mode) {
+      const container = document.getElementById('shelves-container');
+      const shelfBtn = document.getElementById('view-shelf-btn');
+      const gridBtn = document.getElementById('view-grid-btn');
+
+      if (mode === 'grid') {
+        container.classList.add('grid-mode');
+        gridBtn.classList.add('active');
+        shelfBtn.classList.remove('active');
+      } else {
+        container.classList.remove('grid-mode');
+        shelfBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+      }
+    }
+
+    // Modal Handlers
+    function openAddModal() {
+      document.getElementById('add-modal').classList.add('active');
+    }
+
+    function closeAddModal() {
+      document.getElementById('add-modal').classList.remove('active');
+      document.getElementById('add-book-form').reset();
+    }
+
+    function openScannerModal() {
+      document.getElementById('scanner-modal').classList.add('active');
+    }
+
+    function closeScannerModal() {
+      document.getElementById('scanner-modal').classList.remove('active');
+    }
+
+    function handleAddBook(e) {
+      e.preventDefault();
+      const title = document.getElementById('book-title').value.trim();
+      const author = document.getElementById('book-author').value.trim();
+      const shelf = document.getElementById('book-shelf').value;
+      const color = document.getElementById('book-color').value;
+
+      if (title && author) {
+        books.push({
+          id: Date.now().toString(),
+          title,
+          author,
+          shelf,
+          color,
+          progress: shelf === 'completed' ? 100 : (shelf === 'reading' ? 10 : 0)
+        });
+        saveAndRender();
+        closeAddModal();
+      }
+    }
+
+    function simulateScan() {
+      const samples = [
+        { title: 'Project Hail Mary', author: 'Andy Weir', color: '#8c5221' },
+        { title: 'Neuromancer', author: 'William Gibson', color: '#2b4c3f' },
+        { title: 'Snow Crash', author: 'Neal Stephenson', color: '#3a5a78' }
+      ];
+      const pick = samples[Math.floor(Math.random() * samples.length)];
       
       books.push({
         id: Date.now().toString(),
-        title: titles[idx],
-        author: authors[idx],
+        title: pick.title,
+        author: pick.author,
         shelf: 'wishlist',
-        color: colors[idx]
+        color: pick.color,
+        progress: 0
       });
 
-      renderBooks();
+      saveAndRender();
+      closeScannerModal();
     }
 
-    function removeBook(id) {
+    function removeBook(id, event) {
+      event.stopPropagation();
       books = books.filter(b => b.id !== id);
-      renderBooks();
+      saveAndRender();
     }
 
-    // Initial Render
-    renderBooks();
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, match => {
+        const escapeMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return escapeMap[match];
+      });
+    }
+
+    // Startup
+    initLibrary();
   </script>
 </body>
 </html>
