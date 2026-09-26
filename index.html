@@ -14,6 +14,8 @@
       --text-muted: #a0a0a0;
       --accent-color: #e0a96d;
       --border-color: #333644;
+      --theme-decor-left: '';
+      --theme-decor-right: '';
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -54,7 +56,10 @@
       align-items: center;
       gap: 0.4rem;
       font-size: 0.9rem;
+      transition: filter 0.2s;
     }
+
+    button:hover { filter: brightness(1.1); }
 
     button.secondary {
       background: var(--panel-bg);
@@ -83,7 +88,7 @@
     }
     .avatar:first-child { margin-left: 0; }
 
-    /* Shelves Container */
+    /* Shelves & Rails */
     .shelves-container { display: flex; flex-direction: column; gap: 3.5rem; margin-top: 1rem; }
 
     .shelf-wrapper {
@@ -91,6 +96,27 @@
       background: rgba(0,0,0,0.15);
       border-radius: 8px;
       padding: 1rem 1rem 0 1rem;
+    }
+
+    /* Atmospheric Theme Overlay Decorations */
+    .shelf-wrapper::before {
+      content: var(--theme-decor-left);
+      position: absolute;
+      top: -18px;
+      left: 12px;
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .shelf-wrapper::after {
+      content: var(--theme-decor-right);
+      position: absolute;
+      top: -18px;
+      right: 12px;
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 5;
     }
 
     .books-row {
@@ -110,7 +136,7 @@
 
     /* Wood Shelf Plank Structure */
     .shelf-plank {
-      height: 32px;
+      height: 34px;
       background: var(--shelf-color);
       border-radius: 0 0 6px 6px;
       box-shadow: 0 8px 12px rgba(0,0,0,0.5);
@@ -158,12 +184,12 @@
       outline: none;
     }
 
-    /* Book Spines (Default Resting View) */
+    /* Book Spines with Cover Art Vignette */
     .book-spine {
-      width: 38px;
+      width: 42px;
       height: 160px;
       border-radius: 3px 5px 5px 3px;
-      padding: 0.6rem 0.2rem;
+      padding: 0.5rem 0.2rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -176,6 +202,28 @@
       flex-shrink: 0;
       border-left: 4px solid rgba(255,255,255,0.25);
       border-right: 2px solid rgba(0,0,0,0.4);
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .book-spine-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .spine-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
     }
 
     .book-spine:hover {
@@ -190,12 +238,12 @@
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 1px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.9);
-      max-height: 110px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+      max-height: 105px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -206,7 +254,7 @@
       color: #ffd700;
     }
 
-    /* Modals & Popups */
+    /* Modals */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85);
@@ -240,7 +288,7 @@
       outline: none;
     }
 
-    /* Book Pull-Out Front Cover View inside Modal */
+    /* Pull-Out Book Front Cover View */
     .book-pullout-container {
       display: flex;
       gap: 1.5rem;
@@ -262,6 +310,7 @@
       position: relative;
       background-size: cover;
       background-position: center;
+      overflow: hidden;
     }
 
     .book-cover-overlay {
@@ -276,35 +325,44 @@
       display: flex; flex-direction: column; justify-content: space-between;
     }
 
-    /* Theme Select Grid */
+    /* Theme Cards */
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.6rem;
+      gap: 0.8rem;
       margin-bottom: 1.2rem;
     }
 
     .theme-card {
       background: var(--app-bg);
-      border: 1px solid var(--border-color);
-      padding: 0.6rem;
+      border: 2px solid var(--border-color);
+      padding: 0.8rem;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
-      align-items: center;
-      gap: 0.6rem;
+      flex-direction: column;
+      gap: 0.4rem;
       font-size: 0.85rem;
+      transition: border-color 0.2s, transform 0.2s;
     }
 
-    .theme-card:hover { border-color: var(--accent-color); }
+    .theme-card:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
 
-    .theme-swatch {
-      width: 18px; height: 18px; border-radius: 50%; border: 1px solid #fff;
+    .theme-card.active {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 8px var(--accent-color);
+    }
+
+    .theme-preview-bar {
+      display: flex; height: 12px; border-radius: 4px; overflow: hidden; margin-top: 4px;
     }
 
     /* Search Results List */
     .search-results {
-      max-height: 200px;
+      max-height: 220px;
       overflow-y: auto;
       border: 1px solid var(--border-color);
       border-radius: 6px;
@@ -324,11 +382,11 @@
     .search-item:hover { background: rgba(255,255,255,0.05); }
 
     .search-thumb {
-      width: 30px; height: 42px; background: #333; border-radius: 2px; object-fit: cover;
+      width: 32px; height: 46px; background: #333; border-radius: 3px; object-fit: cover; flex-shrink: 0;
     }
 
     .scanner-view {
-      height: 110px; background: #000; border-radius: 6px;
+      height: 100px; background: #000; border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden; border: 1px dashed var(--accent-color);
       margin-bottom: 1rem;
@@ -360,7 +418,7 @@
     </div>
 
     <div class="controls">
-      <button onclick="openScanModal()">📷 Add / Scan Book</button>
+      <button onclick="openScanModal()">📷 Add / Search Book</button>
       <button class="secondary" onclick="openAddShelfModal()">+ Add Shelf</button>
       <button class="secondary" onclick="openThemeModal()">🎨 Themes & Colors</button>
       <button class="secondary" onclick="exportData()">💾 Backup</button>
@@ -374,15 +432,15 @@
   <div class="modal-overlay" id="prompt-modal">
     <div class="modal">
       <div class="modal-header">
-        <h3 id="prompt-book-title">Scanned Book Detected</h3>
+        <h3 id="prompt-book-title">Selected Book</h3>
         <button onclick="closeModal('prompt-modal')" class="secondary">✕</button>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Choose where to route this book in Lumina Library:</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Select target shelf for this title:</p>
       <div style="display: flex; flex-direction: column; gap: 0.6rem;" id="prompt-shelf-options"></div>
     </div>
   </div>
 
-  <!-- Book Pull-Out Detail Modal -->
+  <!-- Book Inspection / Pull-Out Modal -->
   <div class="modal-overlay" id="detail-modal">
     <div class="modal">
       <div class="modal-header">
@@ -402,7 +460,12 @@
         <div style="flex: 1;">
           <h2 id="detail-title" style="font-size: 1.2rem; margin-bottom: 0.2rem; color: var(--accent-color);"></h2>
           <p id="detail-author" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;"></p>
-          
+
+          <div class="form-group">
+            <label>Cover Image URL</label>
+            <input type="text" id="detail-cover-url" placeholder="https://..." onchange="updateDetailCoverPreview(this.value)">
+          </div>
+
           <div class="form-group">
             <label>Move to Shelf</label>
             <select id="detail-shelf-select"></select>
@@ -462,19 +525,46 @@
         <button onclick="closeModal('theme-modal')" class="secondary">✕</button>
       </div>
 
-      <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Preset Themes</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Cohesive Preset Themes</label>
       <div class="theme-grid">
-        <div class="theme-card" onclick="applyPreset('default')">
-          <div class="theme-swatch" style="background: #1a1b23;"></div> Default Dark
+        <div class="theme-card" id="card-cafe" onclick="applyPreset('cafe')">
+          <div style="font-weight: bold;">☕ Warm Café</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Espresso, golds, candles & vines</div>
+          <div class="theme-preview-bar">
+            <div style="flex:1; background: #23170f;"></div>
+            <div style="flex:1; background: #3e2718;"></div>
+            <div style="flex:1; background: #e0a96d;"></div>
+          </div>
         </div>
-        <div class="theme-card" onclick="applyPreset('woodland')">
-          <div class="theme-swatch" style="background: #1c281a;"></div> Woodland
+
+        <div class="theme-card" id="card-woodland" onclick="applyPreset('woodland')">
+          <div style="font-weight: bold;">🌿 Woodland</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Forest greens, moss & leaf borders</div>
+          <div class="theme-preview-bar">
+            <div style="flex:1; background: #121c14;"></div>
+            <div style="flex:1; background: #1e2e20;"></div>
+            <div style="flex:1; background: #81c784;"></div>
+          </div>
         </div>
-        <div class="theme-card" onclick="applyPreset('cafe')">
-          <div class="theme-swatch" style="background: #2b1e1a;"></div> Warm Café
+
+        <div class="theme-card" id="card-space" onclick="applyPreset('space')">
+          <div style="font-weight: bold;">🚀 Deep Space</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Minimal dark slate & starlight accents</div>
+          <div class="theme-preview-bar">
+            <div style="flex:1; background: #0b0e14;"></div>
+            <div style="flex:1; background: #161b26;"></div>
+            <div style="flex:1; background: #64b5f6;"></div>
+          </div>
         </div>
-        <div class="theme-card" onclick="applyPreset('space')">
-          <div class="theme-swatch" style="background: #0b0d17;"></div> Deep Space
+
+        <div class="theme-card" id="card-default" onclick="applyPreset('default')">
+          <div style="font-weight: bold;">🌙 Classic Library</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Dark indigo slate & rich walnut wood</div>
+          <div class="theme-preview-bar">
+            <div style="flex:1; background: #1a1b23;"></div>
+            <div style="flex:1; background: #3e2723;"></div>
+            <div style="flex:1; background: #d4a373;"></div>
+          </div>
         </div>
       </div>
 
@@ -492,20 +582,24 @@
         <label>Shelf Text / Inscription Color</label>
         <input type="color" id="label-color-picker" onchange="updateCustomColors()">
       </div>
+      <div class="form-group">
+        <label>Accent Highlight Color</label>
+        <input type="color" id="accent-color-picker" onchange="updateCustomColors()">
+      </div>
     </div>
   </div>
 
-  <!-- Add & Scan Modal with Type-In Search -->
+  <!-- Search & Add Modal -->
   <div class="modal-overlay" id="scan-modal">
     <div class="modal">
       <div class="modal-header">
-        <h3>Add or Scan Book</h3>
+        <h3>Add or Search Book</h3>
         <button onclick="closeModal('scan-modal')" class="secondary">✕</button>
       </div>
 
       <div class="form-group">
         <label>Search Title, Author, or ISBN</label>
-        <input type="text" id="book-search-input" placeholder="e.g. Dune, Tolkien, or 9780441172719" oninput="handleSearchInput(this.value)">
+        <input type="text" id="book-search-input" placeholder="e.g. Dune, Orwell, or Tolkien" oninput="handleSearchInput(this.value)">
       </div>
 
       <div id="search-results-list" class="search-results" style="display: none;"></div>
@@ -525,23 +619,92 @@
 
   <script>
     const THEME_PRESETS = {
-      default: { bg: '#1a1b23', shelf: '#3e2723', label: '#d4a373' },
-      woodland: { bg: '#1c281a', shelf: '#2d3b22', label: '#a3c995' },
-      cafe: { bg: '#2b1e1a', shelf: '#422a21', label: '#e6beae' },
-      space: { bg: '#0b0d17', shelf: '#1a1d36', label: '#8a99e6' }
+      cafe: {
+        id: 'cafe',
+        bg: '#23170f',
+        shelf: '#3e2718',
+        label: '#e0a96d',
+        accent: '#e0a96d',
+        panel: '#2d1e15',
+        decorLeft: '"🕯️ 🌿"',
+        decorRight: '"🌿 🕯️"'
+      },
+      woodland: {
+        id: 'woodland',
+        bg: '#121c14',
+        shelf: '#1e2e20',
+        label: '#a3c995',
+        accent: '#81c784',
+        panel: '#18241a',
+        decorLeft: '"🌿 🍃"',
+        decorRight: '"🍃 🌿"'
+      },
+      space: {
+        id: 'space',
+        bg: '#0b0e14',
+        shelf: '#161b26',
+        label: '#90caf9',
+        accent: '#64b5f6',
+        panel: '#101520',
+        decorLeft: '"✨"',
+        decorRight: '"✦"'
+      },
+      default: {
+        id: 'default',
+        bg: '#1a1b23',
+        shelf: '#3e2723',
+        label: '#d4a373',
+        accent: '#e0a96d',
+        panel: '#222430',
+        decorLeft: '""',
+        decorRight: '""'
+      }
     };
 
+    const BOOK_SPINE_PALETTE = ['#8c3a2b', '#2d5a43', '#2b4c6f', '#6b3e6e', '#7a5a3a', '#3f51b5', '#4e342e'];
+
     let appData = {
-      theme: { bg: '#1a1b23', shelf: '#3e2723', label: '#d4a373' },
+      currentThemeId: 'cafe',
+      theme: { ...THEME_PRESETS.cafe },
       shelves: [
         { id: 'fiction', name: 'FICTION' },
         { id: 'wishlist', name: 'WISHLIST' },
         { id: 'reviews', name: 'BOOK REVIEWS' }
       ],
       books: [
-        { id: '1', title: 'Dune', author: 'Frank Herbert', shelf: 'fiction', color: '#2b4c3f', stars: 5, progress: 45, summary: 'Epic science fiction saga.' },
-        { id: '2', title: '1984', author: 'George Orwell', shelf: 'reviews', color: '#7a2e2e', stars: 4, progress: 100, summary: 'Classic dystopian commentary.' },
-        { id: '3', title: 'The Hobbit', author: 'J.R.R. Tolkien', shelf: 'fiction', color: '#3a5a78', stars: 5, progress: 80, summary: 'Fantasy adventure.' }
+        {
+          id: '1',
+          title: 'Dune',
+          author: 'Frank Herbert',
+          shelf: 'fiction',
+          color: '#2b4c6f',
+          coverUrl: 'https://covers.openlibrary.org/b/id/12822238-L.jpg',
+          stars: 5,
+          progress: 45,
+          summary: 'Epic science fiction saga on Arrakis.'
+        },
+        {
+          id: '2',
+          title: '1984',
+          author: 'George Orwell',
+          shelf: 'reviews',
+          color: '#8c3a2b',
+          coverUrl: 'https://covers.openlibrary.org/b/id/12833521-L.jpg',
+          stars: 4,
+          progress: 100,
+          summary: 'Classic dystopian masterpiece.'
+        },
+        {
+          id: '3',
+          title: 'The Hobbit',
+          author: 'J.R.R. Tolkien',
+          shelf: 'fiction',
+          color: '#2d5a43',
+          coverUrl: 'https://covers.openlibrary.org/b/id/12002512-L.jpg',
+          stars: 5,
+          progress: 80,
+          summary: 'Fantasy journey through Middle-earth.'
+        }
       ]
     };
 
@@ -551,32 +714,42 @@
     let searchDebounceTimeout = null;
 
     function initApp() {
-      const saved = localStorage.getItem('lumina_v3_data');
+      const saved = localStorage.getItem('lumina_v4_data');
       if (saved) {
         try { appData = JSON.parse(saved); } catch(e){}
       }
-      if (!appData.theme.label) appData.theme.label = '#d4a373';
       applyTheme();
       renderShelves();
     }
 
     function saveData() {
-      localStorage.setItem('lumina_v3_data', JSON.stringify(appData));
+      localStorage.setItem('lumina_v4_data', JSON.stringify(appData));
       renderShelves();
     }
 
     function applyTheme() {
-      document.documentElement.style.setProperty('--app-bg', appData.theme.bg);
-      document.documentElement.style.setProperty('--shelf-color', appData.theme.shelf);
-      document.documentElement.style.setProperty('--shelf-label-color', appData.theme.label);
+      const t = appData.theme;
+      document.documentElement.style.setProperty('--app-bg', t.bg);
+      document.documentElement.style.setProperty('--shelf-color', t.shelf);
+      document.documentElement.style.setProperty('--shelf-label-color', t.label);
+      document.documentElement.style.setProperty('--accent-color', t.accent);
+      document.documentElement.style.setProperty('--panel-bg', t.panel || '#222430');
+      document.documentElement.style.setProperty('--theme-decor-left', t.decorLeft || '""');
+      document.documentElement.style.setProperty('--theme-decor-right', t.decorRight || '""');
 
-      document.getElementById('bg-color-picker').value = appData.theme.bg;
-      document.getElementById('shelf-color-picker').value = appData.theme.shelf;
-      document.getElementById('label-color-picker').value = appData.theme.label;
+      document.getElementById('bg-color-picker').value = t.bg;
+      document.getElementById('shelf-color-picker').value = t.shelf;
+      document.getElementById('label-color-picker').value = t.label;
+      document.getElementById('accent-color-picker').value = t.accent;
+
+      document.querySelectorAll('.theme-card').forEach(card => card.classList.remove('active'));
+      const activeCard = document.getElementById(`card-${appData.currentThemeId}`);
+      if (activeCard) activeCard.classList.add('active');
     }
 
     function applyPreset(name) {
       if (THEME_PRESETS[name]) {
+        appData.currentThemeId = name;
         appData.theme = { ...THEME_PRESETS[name] };
         applyTheme();
         saveData();
@@ -587,6 +760,7 @@
       appData.theme.bg = document.getElementById('bg-color-picker').value;
       appData.theme.shelf = document.getElementById('shelf-color-picker').value;
       appData.theme.label = document.getElementById('label-color-picker').value;
+      appData.theme.accent = document.getElementById('accent-color-picker').value;
       applyTheme();
       saveData();
     }
@@ -610,16 +784,24 @@
         shelfBooks.forEach(book => {
           const spine = document.createElement('div');
           spine.className = 'book-spine';
-          spine.style.backgroundColor = book.color;
+          spine.style.backgroundColor = book.color || BOOK_SPINE_PALETTE[0];
+
+          if (book.coverUrl) {
+            spine.style.backgroundImage = `url("${book.coverUrl}")`;
+          }
+
           spine.draggable = true;
           spine.onclick = () => pullOutBook(book.id);
           spine.ondragstart = () => { draggedBookId = book.id; spine.classList.add('dragging'); };
           spine.ondragend = () => spine.classList.remove('dragging');
 
           spine.innerHTML = `
-            <div class="spine-stars">${'★'.repeat(book.stars || 0)}</div>
-            <div class="spine-title">${escapeHtml(book.title)}</div>
-            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.7);">📌</div>
+            <div class="book-spine-overlay"></div>
+            <div class="spine-content">
+              <div class="spine-stars">${'★'.repeat(book.stars || 0)}</div>
+              <div class="spine-title">${escapeHtml(book.title)}</div>
+              <div style="font-size: 0.55rem; color: rgba(255,255,255,0.7);">📌</div>
+            </div>
           `;
           row.appendChild(spine);
         });
@@ -694,11 +876,9 @@
       document.getElementById('detail-progress-range').value = book.progress || 0;
       document.getElementById('progress-label').textContent = `${book.progress || 0}% read`;
       document.getElementById('detail-summary').value = book.summary || '';
+      document.getElementById('detail-cover-url').value = book.coverUrl || '';
 
-      const coverPreview = document.getElementById('cover-preview');
-      coverPreview.style.backgroundColor = book.color;
-      document.getElementById('cover-preview-title').textContent = book.title;
-      document.getElementById('cover-preview-author').textContent = book.author;
+      updateDetailCoverPreview(book.coverUrl, book);
 
       const shelfSelect = document.getElementById('detail-shelf-select');
       shelfSelect.innerHTML = '';
@@ -713,6 +893,21 @@
       document.getElementById('detail-modal').classList.add('active');
     }
 
+    function updateDetailCoverPreview(url, bookRef) {
+      const coverPreview = document.getElementById('cover-preview');
+      const book = bookRef || appData.books.find(b => b.id === activeBookId);
+
+      coverPreview.style.backgroundColor = (book && book.color) ? book.color : '#333';
+      if (url && url.trim()) {
+        coverPreview.style.backgroundImage = `url("${url.trim()}")`;
+      } else {
+        coverPreview.style.backgroundImage = 'none';
+      }
+
+      document.getElementById('cover-preview-title').textContent = book ? book.title : '';
+      document.getElementById('cover-preview-author').textContent = book ? book.author : '';
+    }
+
     function saveBookDetails() {
       const book = appData.books.find(b => b.id === activeBookId);
       if (book) {
@@ -720,6 +915,7 @@
         book.progress = parseInt(document.getElementById('detail-progress-range').value);
         book.summary = document.getElementById('detail-summary').value;
         book.shelf = document.getElementById('detail-shelf-select').value;
+        book.coverUrl = document.getElementById('detail-cover-url').value.trim();
         saveData();
       }
       closeModal('detail-modal');
@@ -733,7 +929,7 @@
       }
     }
 
-    /* Type-In Search Feature via Open Library API */
+    /* Open Library Search API with Cover Artwork */
     function handleSearchInput(query) {
       clearTimeout(searchDebounceTimeout);
       const resultsContainer = document.getElementById('search-results-list');
@@ -744,7 +940,7 @@
       }
 
       searchDebounceTimeout = setTimeout(() => {
-        fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=5`)
+        fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=6`)
           .then(res => res.json())
           .then(data => {
             resultsContainer.innerHTML = '';
@@ -755,8 +951,11 @@
                 item.className = 'search-item';
                 const title = doc.title || 'Unknown Title';
                 const author = doc.author_name ? doc.author_name[0] : 'Unknown Author';
-                
+                const coverId = doc.cover_i;
+                const coverUrl = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : '';
+
                 item.innerHTML = `
+                  <img class="search-thumb" src="${coverUrl || 'data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"40\" viewBox=\"0 0 30 40\"><rect width=\"30\" height=\"40\" fill=\"%23444\"/></svg>'}" alt="">
                   <div style="flex: 1;">
                     <div style="font-size: 0.85rem; font-weight: bold; color: var(--text-main);">${escapeHtml(title)}</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(author)}</div>
@@ -765,7 +964,7 @@
 
                 item.onclick = () => {
                   closeModal('scan-modal');
-                  selectBookFromSearch(title, author);
+                  selectBookFromSearch(title, author, coverUrl);
                 };
                 resultsContainer.appendChild(item);
               });
@@ -780,10 +979,18 @@
       }, 300);
     }
 
-    function selectBookFromSearch(title, author) {
-      const colors = ['#2b4c3f', '#7a2e2e', '#3a5a78', '#5a3a78', '#7a5a3a'];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      pendingScannedBook = { id: Date.now().toString(), title, author, color: randomColor, stars: 5, progress: 0, summary: '' };
+    function selectBookFromSearch(title, author, coverUrl) {
+      const color = BOOK_SPINE_PALETTE[Math.floor(Math.random() * BOOK_SPINE_PALETTE.length)];
+      pendingScannedBook = {
+        id: Date.now().toString(),
+        title,
+        author,
+        color,
+        coverUrl: coverUrl || '',
+        stars: 5,
+        progress: 0,
+        summary: ''
+      };
 
       document.getElementById('prompt-book-title').textContent = `Selected: ${title}`;
       const optionsContainer = document.getElementById('prompt-shelf-options');
@@ -799,7 +1006,6 @@
       document.getElementById('prompt-modal').classList.add('active');
     }
 
-    /* Modal Navigation & Scan Simulations */
     function openScanModal() {
       document.getElementById('book-search-input').value = '';
       document.getElementById('search-results-list').style.display = 'none';
@@ -811,11 +1017,11 @@
     function simulateScan() {
       closeModal('scan-modal');
       const samples = [
-        { title: 'Foundation', author: 'Isaac Asimov', color: '#5a3a78' },
-        { title: 'Fahrenheit 451', author: 'Ray Bradbury', color: '#7a2e2e' }
+        { title: 'Foundation', author: 'Isaac Asimov', coverUrl: 'https://covers.openlibrary.org/b/id/12832521-L.jpg' },
+        { title: 'Fahrenheit 451', author: 'Ray Bradbury', coverUrl: 'https://covers.openlibrary.org/b/id/12822210-L.jpg' }
       ];
       const picked = samples[Math.floor(Math.random() * samples.length)];
-      selectBookFromSearch(picked.title, picked.author);
+      selectBookFromSearch(picked.title, picked.author, picked.coverUrl);
     }
 
     function confirmRoute(targetShelfId) {
@@ -848,7 +1054,7 @@
       const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `lumina_library_v3_backup.json`;
+      a.download = `lumina_library_v4_backup.json`;
       a.click();
     }
 
