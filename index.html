@@ -6,29 +6,24 @@
   <title>Lumina Library</title>
   <style>
     :root {
-      --bg-color: #121318;
-      --panel-bg: #1e2029;
-      --shelf-wood: #2c1d11;
-      --shelf-wood-top: #422a18;
-      --accent: #d4a373;
-      --accent-light: #fefae0;
-      --text: #e0e0e0;
+      --app-bg: #1a1b23;
+      --shelf-color: #3e2723;
+      --shelf-label-color: #d4a373;
+      --panel-bg: #222430;
+      --text-main: #f0f0f0;
       --text-muted: #a0a0a0;
-      --border: #333644;
+      --accent-color: #e0a96d;
+      --border-color: #333644;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text);
+      background-color: var(--app-bg);
+      color: var(--text-main);
       min-height: 100vh;
-      padding: 2rem;
+      padding: 1.5rem;
+      transition: background-color 0.3s;
     }
 
     header {
@@ -38,346 +33,191 @@
       align-items: center;
       gap: 1rem;
       margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .brand { display: flex; align-items: center; gap: 0.8rem; }
+    h1 { font-size: 1.8rem; color: var(--accent-color); }
 
-    h1 {
-      font-size: 1.8rem;
-      color: var(--accent);
-      letter-spacing: 1px;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
     button {
-      background: var(--accent);
+      background: var(--accent-color);
       color: #121318;
       border: none;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-    }
-
-    button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
+      font-size: 0.9rem;
     }
 
     button.secondary {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    button.secondary:hover {
       background: var(--panel-bg);
-      border-color: var(--accent);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
     }
 
-    .view-toggle {
+    .sharing-badge {
       display: flex;
-      background: var(--panel-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .view-toggle button {
-      background: transparent;
-      color: var(--text-muted);
-      border-radius: 0;
-      padding: 0.6rem 1rem;
-    }
-
-    .view-toggle button.active {
-      background: var(--accent);
-      color: #121318;
-    }
-
-    .shelves-container {
-      display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
-    }
-
-    .shelf {
-      background: var(--panel-bg);
-      border-radius: 8px;
-      padding: 1.5rem;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-      border: 1px solid var(--border);
-    }
-
-    .shelf-header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      gap: 0.5rem;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
     }
 
-    .shelf-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--accent-light);
+    .avatar-group { display: flex; }
+    .avatar {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent-color); color: #000;
+      font-size: 0.65rem; font-weight: bold;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--panel-bg); margin-left: -6px;
+    }
+    .avatar:first-child { margin-left: 0; }
+
+    /* Shelves & Wooden Rail */
+    .shelves-container { display: flex; flex-direction: column; gap: 3.5rem; margin-top: 1rem; }
+
+    .shelf-wrapper {
+      position: relative;
+      background: rgba(0,0,0,0.15);
+      border-radius: 8px;
+      padding: 1rem 1rem 0 1rem;
     }
 
-    .book-count {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-    }
-
-    /* 3D Shelf Display */
     .books-row {
       display: flex;
       gap: 1.2rem;
       align-items: flex-end;
-      min-height: 200px;
-      padding: 1.5rem 1rem 0.5rem 1rem;
-      background: linear-gradient(to bottom, transparent 88%, var(--shelf-wood-top) 88%, var(--shelf-wood) 100%);
-      border-bottom: 12px solid var(--shelf-wood);
+      min-height: 190px;
+      padding: 1rem 0.5rem 0 0.5rem;
       overflow-x: auto;
-      transition: background 0.2s;
+      scroll-behavior: smooth;
     }
 
     .books-row.drag-over {
-      background: rgba(212, 163, 115, 0.15);
-      outline: 2px dashed var(--accent);
-      outline-offset: -4px;
+      background: rgba(255,255,255,0.05);
+      outline: 2px dashed var(--accent-color);
     }
 
-    /* Compact Grid View Mode */
-    .shelves-container.grid-mode .books-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 1.5rem;
-      background: none;
-      border-bottom: none;
-      min-height: auto;
-      padding: 1rem 0;
+    /* Wood Shelf Structure with Inset Title */
+    .shelf-plank {
+      height: 28px;
+      background: var(--shelf-color);
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-top: 2px solid rgba(255,255,255,0.15);
     }
 
+    .shelf-plank-label {
+      color: var(--shelf-label-color);
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      user-select: none;
+    }
+
+    /* Books - Detailed Cover Matching Spine Design */
     .book {
-      width: 110px;
-      height: 160px;
-      border-radius: 4px 8px 8px 4px;
-      padding: 0.8rem;
+      width: 100px;
+      height: 155px;
+      border-radius: 3px 6px 6px 3px;
+      padding: 0.6rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: grab;
       user-select: none;
-      box-shadow: -4px 4px 10px rgba(0,0,0,0.5);
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: -5px 5px 12px rgba(0,0,0,0.6);
+      transition: transform 0.2s;
       position: relative;
       flex-shrink: 0;
+      border-left: 7px solid rgba(0,0,0,0.3); /* Integrated Spine Binding Effect */
     }
 
-    .shelves-container.grid-mode .book {
-      width: 100%;
-      height: 180px;
-    }
-
-    .book:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: -6px 8px 15px rgba(0,0,0,0.6);
-    }
-
-    .book:active {
-      cursor: grabbing;
-    }
-
-    .book.dragging {
-      opacity: 0.3;
-      transform: scale(0.95);
-    }
+    .book:active { cursor: grabbing; }
+    .book.dragging { opacity: 0.3; }
 
     .book-title {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #ffffff;
-      line-height: 1.25;
-      overflow: hidden;
+      color: #fff;
+      line-height: 1.2;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      overflow: hidden;
     }
 
     .book-author {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: rgba(255,255,255,0.85);
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
-    .book-progress {
-      height: 4px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 2px;
-      overflow: hidden;
-      margin-top: 0.4rem;
-    }
-
-    .book-progress-fill {
-      height: 100%;
-      background: var(--accent-light);
-    }
-
-    .book-actions {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      display: opacity;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .book:hover .book-actions {
-      opacity: 1;
-    }
-
-    .action-btn {
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      border: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .action-btn:hover {
-      background: #e63946;
-    }
+    .book-stars { color: #ffd700; font-size: 0.65rem; margin-top: 2px; }
 
     /* Modals */
     .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.75);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
     }
 
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal {
       background: var(--panel-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      width: 100%; max-width: 460px;
+      max-height: 90vh; overflow-y: auto;
     }
 
     .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
     }
 
-    .modal-header h3 {
-      color: var(--accent-light);
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; margin-bottom: 0.3rem; color: var(--text-muted); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.5rem; background: var(--app-bg);
+      border: 1px solid var(--border-color); border-radius: 5px; color: var(--text-main);
     }
 
-    .close-btn {
-      background: transparent;
-      color: var(--text-muted);
-      border: none;
-      font-size: 1.2rem;
-      padding: 0;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      margin-bottom: 0.4rem;
-      color: var(--text-muted);
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 0.618rem;
-      background: var(--bg-color);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      outline: none;
-    }
-
-    .form-group input:focus, .form-group select:focus {
-      border-color: var(--accent);
-    }
-
-    /* Barcode Simulator */
-    .scanner-viewport {
-      height: 140px;
-      background: #000;
-      border-radius: 8px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    .scanner-view {
+      height: 120px; background: #000; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; border: 1px dashed var(--accent-color);
       margin-bottom: 1rem;
-      border: 1px dashed var(--accent);
     }
 
-    .laser {
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background: #ff3b30;
-      box-shadow: 0 0 8px #ff3b30;
-      animation: scan 1.8s infinite ease-in-out;
+    .scanner-laser {
+      position: absolute; width: 100%; height: 2px; background: red;
+      box-shadow: 0 0 6px red; animation: scan 1.5s infinite ease-in-out;
     }
 
-    @keyframes scan {
-      0% { top: 10%; }
-      50% { top: 90%; }
-      100% { top: 10%; }
-    }
+    @keyframes scan { 0% { top: 10%; } 50% { top: 90%; } 100% { top: 10%; } }
   </style>
 </head>
 <body>
@@ -386,147 +226,194 @@
     <div class="brand">
       <h1>📚 Lumina Library</h1>
     </div>
-    <div class="controls">
-      <div class="view-toggle">
-        <button id="view-shelf-btn" class="active" onclick="setViewMode('shelf')">Shelf</button>
-        <button id="view-grid-btn" onclick="setViewMode('grid')">Grid</button>
+
+    <div class="sharing-badge" title="Shared with up to 4 members">
+      <span>Shared (4/4):</span>
+      <div class="avatar-group">
+        <div class="avatar">You</div>
+        <div class="avatar">M1</div>
+        <div class="avatar">M2</div>
+        <div class="avatar">M3</div>
       </div>
-      <button class="secondary" onclick="openScannerModal()">📷 Scan ISBN</button>
-      <button onclick="openAddModal()">+ Add Book</button>
+    </div>
+
+    <div class="controls">
+      <button onclick="openScanModal()">📷 Scan Book</button>
+      <button class="secondary" onclick="openAddShelfModal()">+ Add Shelf</button>
+      <button class="secondary" onclick="openThemeModal()">🎨 Custom Colors</button>
+      <button class="secondary" onclick="exportData()">💾 Backup</button>
+      <button class="secondary" onclick="importData()">📥 Restore</button>
     </div>
   </header>
 
-  <main class="shelves-container" id="shelves-container">
-    <div class="shelf">
-      <div class="shelf-header">
-        <span class="shelf-title">📖 Currently Reading</span>
-        <span class="book-count" id="count-reading">0 books</span>
-      </div>
-      <div class="books-row" id="shelf-reading" data-shelf="reading" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
-    </div>
+  <main class="shelves-container" id="shelves-container"></main>
 
-    <div class="shelf">
-      <div class="shelf-header">
-        <span class="shelf-title">✨ Want to Read</span>
-        <span class="book-count" id="count-wishlist">0 books</span>
-      </div>
-      <div class="books-row" id="shelf-wishlist" data-shelf="wishlist" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
-    </div>
-
-    <div class="shelf">
-      <div class="shelf-header">
-        <span class="shelf-title">✅ Finished</span>
-        <span class="book-count" id="count-completed">0 books</span>
-      </div>
-      <div class="books-row" id="shelf-completed" data-shelf="completed" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"></div>
-    </div>
-  </main>
-
-  <!-- Add Book Modal -->
-  <div class="modal-overlay" id="add-modal">
+  <!-- ISBN Prompt Modal -->
+  <div class="modal-overlay" id="prompt-modal">
     <div class="modal">
       <div class="modal-header">
-        <h3>Add New Book</h3>
-        <button class="close-btn" onclick="closeAddModal()">✕</button>
+        <h3 id="prompt-book-title">Scanned Book Detected</h3>
+        <button onclick="closeModal('prompt-modal')">✕</button>
       </div>
-      <form id="add-book-form" onsubmit="handleAddBook(event)">
-        <div class="form-group">
-          <label for="book-title">Title</label>
-          <input type="text" id="book-title" required placeholder="e.g., The Great Gatsby">
-        </div>
-        <div class="form-group">
-          <label for="book-author">Author</label>
-          <input type="text" id="book-author" required placeholder="e.g., F. Scott Fitzgerald">
-        </div>
-        <div class="form-group">
-          <label for="book-shelf">Shelf</label>
-          <select id="book-shelf">
-            <option value="reading">Currently Reading</option>
-            <option value="wishlist" selected>Want to Read</option>
-            <option value="completed">Finished</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="book-color">Spine/Cover Color</label>
-          <select id="book-color">
-            <option value="#2b4c3f">Emerald Green</option>
-            <option value="#7a2e2e">Crimson Red</option>
-            <option value="#3a5a78">Deep Blue</option>
-            <option value="#5a3a78">Royal Purple</option>
-            <option value="#8c5221">Amber Brown</option>
-          </select>
-        </div>
-        <button type="submit" style="width: 100%; justify-content: center; margin-top: 1rem;">Save to Library</button>
-      </form>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Choose where to route this book in Lumina Library:</p>
+      <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+        <button onclick="confirmRoute('library')">1. Add Book to Library</button>
+        <button onclick="confirmRoute('review')">2. Book Review</button>
+        <button onclick="confirmRoute('reading')">3. Add to Reading List</button>
+        <button onclick="confirmRoute('wishlist')">4. Add to Wishlist</button>
+      </div>
     </div>
   </div>
 
-  <!-- Barcode Scanner Simulator Modal -->
-  <div class="modal-overlay" id="scanner-modal">
+  <!-- Book Detail / Bookmark Modal -->
+  <div class="modal-overlay" id="detail-modal">
     <div class="modal">
       <div class="modal-header">
-        <h3>Scan ISBN Barcode</h3>
-        <button class="close-btn" onclick="closeScannerModal()">✕</button>
+        <h3 id="detail-title">Book Details</h3>
+        <button onclick="closeModal('detail-modal')">✕</button>
       </div>
-      <div class="scanner-viewport">
-        <div class="laser"></div>
-        <span style="font-size: 0.8rem; color: var(--text-muted); z-index: 1;">Position ISBN within frame</span>
+      <div class="form-group">
+        <label>Star Rating</label>
+        <select id="detail-rating">
+          <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+          <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+          <option value="3">⭐⭐⭐ (3 Stars)</option>
+          <option value="2">⭐⭐ (2 Stars)</option>
+          <option value="1">⭐ (1 Star)</option>
+        </select>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; text-align: center;">Simulating barcode lookup from ISBN database...</p>
-      <button onclick="simulateScan()" style="width: 100%; justify-content: center;">Simulate Random ISBN Scan</button>
+      <div class="form-group">
+        <label>Reading Progress / Bookmark (Pages / %)</label>
+        <input type="range" id="detail-progress-range" min="0" max="100" oninput="updateProgressLabel(this.value)">
+        <span id="progress-label" style="font-size: 0.8rem; color: var(--accent-color);">0% read</span>
+      </div>
+      <div class="form-group">
+        <label>Summary / Personal Notes</label>
+        <textarea id="detail-summary" rows="4"></textarea>
+      </div>
+      <button onclick="saveBookDetails()" style="width: 100%; justify-content: center;">Save Updates</button>
+    </div>
+  </div>
+
+  <!-- Add Shelf Modal -->
+  <div class="modal-overlay" id="shelf-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Custom Shelf</h3>
+        <button onclick="closeModal('shelf-modal')">✕</button>
+      </div>
+      <div class="form-group">
+        <label>Shelf Name (Directly Inscribed on Wood)</label>
+        <input type="text" id="new-shelf-name" placeholder="e.g., FICTION, SCI-FI, HISTORY">
+      </div>
+      <button onclick="addShelf()" style="width: 100%; justify-content: center;">Create Shelf</button>
+    </div>
+  </div>
+
+  <!-- Color Customization Modal -->
+  <div class="modal-overlay" id="theme-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>App & Shelf Themes</h3>
+        <button onclick="closeModal('theme-modal')">✕</button>
+      </div>
+      <div class="form-group">
+        <label>Background Color</label>
+        <input type="color" id="bg-color-picker" value="#1a1b23" onchange="updateTheme()">
+      </div>
+      <div class="form-group">
+        <label>Shelf Wood Color</label>
+        <input type="color" id="shelf-color-picker" value="#3e2723" onchange="updateTheme()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Scanner Simulation Modal -->
+  <div class="modal-overlay" id="scan-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Book Scanner</h3>
+        <button onclick="closeModal('scan-modal')">✕</button>
+      </div>
+      <div class="scanner-view">
+        <div class="scanner-laser"></div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); z-index: 2;">Align Barcode or Title Page</span>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button onclick="simulateScan('isbn')" style="flex: 1; justify-content: center;">Scan ISBN</button>
+        <button onclick="simulateScan('title')" class="secondary" style="flex: 1; justify-content: center;">Scan Title Page</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'lumina_library_data';
+    let appData = {
+      theme: { bg: '#1a1b23', shelf: '#3e2723' },
+      shelves: [
+        { id: 'fiction', name: 'FICTION' },
+        { id: 'wishlist', name: 'WISHLIST' },
+        { id: 'reviews', name: 'BOOK REVIEWS' }
+      ],
+      books: [
+        { id: '1', title: 'Dune', author: 'Frank Herbert', shelf: 'fiction', color: '#2b4c3f', stars: 5, progress: 45, summary: 'Epic science fiction saga.' },
+        { id: '2', title: '1984', author: 'George Orwell', shelf: 'reviews', color: '#7a2e2e', stars: 4, progress: 100, summary: 'Classic dystopian commentary.' }
+      ]
+    };
 
-    const defaultBooks = [
-      { id: '1', title: 'Dune', author: 'Frank Herbert', shelf: 'reading', color: '#2b4c3f', progress: 65 },
-      { id: '2', title: '1984', author: 'George Orwell', shelf: 'reading', color: '#7a2e2e', progress: 30 },
-      { id: '3', title: 'The Hobbit', author: 'J.R.R. Tolkien', shelf: 'wishlist', color: '#3a5a78', progress: 0 },
-      { id: '4', title: 'Foundation', author: 'Isaac Asimov', shelf: 'completed', color: '#5a3a78', progress: 100 }
-    ];
-
-    let books = [];
+    let activeBookId = null;
+    let pendingScannedBook = null;
     let draggedBookId = null;
 
-    // Initialize Library Data
-    function initLibrary() {
-      const saved = localStorage.getItem(STORAGE_KEY);
+    function initApp() {
+      const saved = localStorage.getItem('lumina_v2_data');
       if (saved) {
-        try {
-          books = JSON.parse(saved);
-        } catch(e) {
-          books = [...defaultBooks];
-        }
-      } else {
-        books = [...defaultBooks];
+        try { appData = JSON.parse(saved); } catch(e){}
       }
-      saveAndRender();
+      applyTheme();
+      renderShelves();
     }
 
-    function saveAndRender() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
-      renderBooks();
+    function saveData() {
+      localStorage.setItem('lumina_v2_data', JSON.stringify(appData));
+      renderShelves();
     }
 
-    function renderBooks() {
-      const shelves = ['reading', 'wishlist', 'completed'];
-      
-      shelves.forEach(shelfKey => {
-        const row = document.getElementById(`shelf-${shelfKey}`);
-        const countSpan = document.getElementById(`count-${shelfKey}`);
-        const shelfBooks = books.filter(b => b.shelf === shelfKey);
+    function applyTheme() {
+      document.documentElement.style.setProperty('--app-bg', appData.theme.bg);
+      document.documentElement.style.setProperty('--shelf-color', appData.theme.shelf);
+    }
 
-        row.innerHTML = '';
-        countSpan.textContent = `${shelfBooks.length} ${shelfBooks.length === 1 ? 'book' : 'books'}`;
+    function updateTheme() {
+      appData.theme.bg = document.getElementById('bg-color-picker').value;
+      appData.theme.shelf = document.getElementById('shelf-color-picker').value;
+      applyTheme();
+      saveData();
+    }
 
+    function renderShelves() {
+      const container = document.getElementById('shelves-container');
+      container.innerHTML = '';
+
+      appData.shelves.forEach(shelf => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'shelf-wrapper';
+
+        const row = document.createElement('div');
+        row.className = 'books-row';
+        row.dataset.shelfId = shelf.id;
+        row.ondragover = e => { e.preventDefault(); row.classList.add('drag-over'); };
+        row.ondragleave = () => row.classList.remove('drag-over');
+        row.ondrop = handleDrop;
+
+        const shelfBooks = appData.books.filter(b => b.shelf === shelf.id);
         shelfBooks.forEach(book => {
           const el = document.createElement('div');
           el.className = 'book';
           el.style.backgroundColor = book.color;
           el.draggable = true;
-          el.dataset.id = book.id;
+          el.onclick = () => openDetailModal(book.id);
+          el.ondragstart = (e) => { draggedBookId = book.id; el.classList.add('dragging'); };
+          el.ondragend = () => el.classList.remove('dragging');
 
           el.innerHTML = `
             <div>
@@ -534,151 +421,139 @@
               <div class="book-author">${escapeHtml(book.author)}</div>
             </div>
             <div>
-              ${book.progress ? `<div class="book-progress"><div class="book-progress-fill" style="width: ${book.progress}%"></div></div>` : ''}
-            </div>
-            <div class="book-actions">
-              <button class="action-btn" onclick="removeBook('${book.id}', event)" title="Remove book">✕</button>
+              <div class="book-stars">${'★'.repeat(book.stars || 0)}</div>
+              <div style="font-size: 0.6rem; color: rgba(255,255,255,0.7); margin-top: 2px;">📌 ${book.progress || 0}%</div>
             </div>
           `;
-
-          el.addEventListener('dragstart', handleDragStart);
-          el.addEventListener('dragend', handleDragEnd);
-
           row.appendChild(el);
         });
+
+        const plank = document.createElement('div');
+        plank.className = 'shelf-plank';
+        plank.innerHTML = `<span class="shelf-plank-label">${escapeHtml(shelf.name)}</span>`;
+
+        wrapper.appendChild(row);
+        wrapper.appendChild(plank);
+        container.appendChild(wrapper);
       });
-    }
-
-    // Drag and Drop Logic
-    function handleDragStart(e) {
-      draggedBookId = this.dataset.id;
-      this.classList.add('dragging');
-      e.dataTransfer.setData('text/plain', draggedBookId);
-      e.dataTransfer.effectAllowed = 'move';
-    }
-
-    function handleDragEnd() {
-      this.classList.remove('dragging');
-      draggedBookId = null;
-      document.querySelectorAll('.books-row').forEach(row => row.classList.remove('drag-over'));
-    }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      e.currentTarget.classList.add('drag-over');
-    }
-
-    function handleDragLeave(e) {
-      e.currentTarget.classList.remove('drag-over');
     }
 
     function handleDrop(e) {
       e.preventDefault();
-      const row = e.currentTarget;
-      row.classList.remove('drag-over');
-
-      const targetShelf = row.dataset.shelf;
-      const book = books.find(b => b.id === draggedBookId);
-
+      this.classList.remove('drag-over');
+      const targetShelf = this.dataset.shelfId;
+      const book = appData.books.find(b => b.id === draggedBookId);
       if (book) {
         book.shelf = targetShelf;
-        saveAndRender();
+        saveData();
       }
     }
 
-    // View Switcher
-    function setViewMode(mode) {
-      const container = document.getElementById('shelves-container');
-      const shelfBtn = document.getElementById('view-shelf-btn');
-      const gridBtn = document.getElementById('view-grid-btn');
+    /* Modal Routing & Scans */
+    function openScanModal() { document.getElementById('scan-modal').classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-      if (mode === 'grid') {
-        container.classList.add('grid-mode');
-        gridBtn.classList.add('active');
-        shelfBtn.classList.remove('active');
-      } else {
-        container.classList.remove('grid-mode');
-        shelfBtn.classList.add('active');
-        gridBtn.classList.remove('active');
-      }
-    }
-
-    // Modal Handlers
-    function openAddModal() {
-      document.getElementById('add-modal').classList.add('active');
-    }
-
-    function closeAddModal() {
-      document.getElementById('add-modal').classList.remove('active');
-      document.getElementById('add-book-form').reset();
-    }
-
-    function openScannerModal() {
-      document.getElementById('scanner-modal').classList.add('active');
-    }
-
-    function closeScannerModal() {
-      document.getElementById('scanner-modal').classList.remove('active');
-    }
-
-    function handleAddBook(e) {
-      e.preventDefault();
-      const title = document.getElementById('book-title').value.trim();
-      const author = document.getElementById('book-author').value.trim();
-      const shelf = document.getElementById('book-shelf').value;
-      const color = document.getElementById('book-color').value;
-
-      if (title && author) {
-        books.push({
-          id: Date.now().toString(),
-          title,
-          author,
-          shelf,
-          color,
-          progress: shelf === 'completed' ? 100 : (shelf === 'reading' ? 10 : 0)
-        });
-        saveAndRender();
-        closeAddModal();
-      }
-    }
-
-    function simulateScan() {
+    function simulateScan(type) {
+      closeModal('scan-modal');
       const samples = [
-        { title: 'Project Hail Mary', author: 'Andy Weir', color: '#8c5221' },
-        { title: 'Neuromancer', author: 'William Gibson', color: '#2b4c3f' },
-        { title: 'Snow Crash', author: 'Neal Stephenson', color: '#3a5a78' }
+        { title: 'The Hobbit', author: 'J.R.R. Tolkien', color: '#3a5a78' },
+        { title: 'Foundation', author: 'Isaac Asimov', color: '#5a3a78' }
       ];
-      const pick = samples[Math.floor(Math.random() * samples.length)];
-      
-      books.push({
-        id: Date.now().toString(),
-        title: pick.title,
-        author: pick.author,
-        shelf: 'wishlist',
-        color: pick.color,
-        progress: 0
-      });
+      const picked = samples[Math.floor(Math.random() * samples.length)];
+      pendingScannedBook = { id: Date.now().toString(), ...picked, stars: 5, progress: 0, summary: '' };
 
-      saveAndRender();
-      closeScannerModal();
+      document.getElementById('prompt-book-title').textContent = `Scanned: ${picked.title}`;
+      document.getElementById('prompt-modal').classList.add('active');
     }
 
-    function removeBook(id, event) {
-      event.stopPropagation();
-      books = books.filter(b => b.id !== id);
-      saveAndRender();
+    function confirmRoute(choice) {
+      closeModal('prompt-modal');
+      if (!pendingScannedBook) return;
+
+      if (choice === 'library') pendingScannedBook.shelf = 'fiction';
+      else if (choice === 'review') pendingScannedBook.shelf = 'reviews';
+      else if (choice === 'reading') pendingScannedBook.shelf = 'fiction';
+      else if (choice === 'wishlist') pendingScannedBook.shelf = 'wishlist';
+
+      appData.books.push(pendingScannedBook);
+      pendingScannedBook = null;
+      saveData();
+    }
+
+    /* Details & Progress */
+    function openDetailModal(id) {
+      activeBookId = id;
+      const book = appData.books.find(b => b.id === id);
+      if (!book) return;
+
+      document.getElementById('detail-title').textContent = book.title;
+      document.getElementById('detail-rating').value = book.stars || 5;
+      document.getElementById('detail-progress-range').value = book.progress || 0;
+      document.getElementById('progress-label').textContent = `${book.progress || 0}% read`;
+      document.getElementById('detail-summary').value = book.summary || '';
+      document.getElementById('detail-modal').classList.add('active');
+    }
+
+    function updateProgressLabel(val) {
+      document.getElementById('progress-label').textContent = `${val}% read`;
+    }
+
+    function saveBookDetails() {
+      const book = appData.books.find(b => b.id === activeBookId);
+      if (book) {
+        book.stars = parseInt(document.getElementById('detail-rating').value);
+        book.progress = parseInt(document.getElementById('detail-progress-range').value);
+        book.summary = document.getElementById('detail-summary').value;
+        saveData();
+      }
+      closeModal('detail-modal');
+    }
+
+    /* Shelves & Backups */
+    function openAddShelfModal() { document.getElementById('shelf-modal').classList.add('active'); }
+    function openThemeModal() { document.getElementById('theme-modal').classList.add('active'); }
+
+    function addShelf() {
+      const name = document.getElementById('new-shelf-name').value.trim().toUpperCase();
+      if (name) {
+        appData.shelves.push({ id: Date.now().toString(), name });
+        saveData();
+        closeModal('shelf-modal');
+      }
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `lumina_library_backup.json`;
+      a.click();
+    }
+
+    function importData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = event => {
+          try {
+            appData = JSON.parse(event.target.result);
+            saveData();
+            applyTheme();
+          } catch(err) { alert('Invalid backup file.'); }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, match => {
-        const escapeMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-        return escapeMap[match];
-      });
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    // Startup
-    initLibrary();
+    initApp();
   </script>
 </body>
 </html>
