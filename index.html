@@ -1,711 +1,706 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina Library - Interactive Book Management & Themes</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Library</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-        .serif {
-            font-family: 'Playfair Display', serif;
-        }
+    :root {
+      --bg-image: url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&q=80&w=2000');
+      --overlay-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --accent-color: #059669;
+      --shelf-wood: #8a5a36;
+      --shelf-shadow: #5c3a21;
+    }
 
-        /* Glassmorphism utilities for high contrast over wallpapers */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
+    body.theme-botanical {
+      --bg-image: url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&q=80&w=2000');
+      --overlay-bg: rgba(244, 247, 244, 0.75);
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --text-main: #132e1d;
+      --text-muted: #385e45;
+      --accent-color: #2d6a4f;
+      --shelf-wood: #7f5539;
+      --shelf-shadow: #523722;
+    }
 
-        .glass-card-dark {
-            background: rgba(18, 24, 38, 0.78);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
+    body.theme-jungle {
+      --bg-image: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=2000');
+      --overlay-bg: rgba(18, 38, 25, 0.78);
+      --card-bg: rgba(28, 54, 38, 0.88);
+      --text-main: #f0fdf4;
+      --text-muted: #a7f3d0;
+      --accent-color: #10b981;
+      --shelf-wood: #543d2b;
+      --shelf-shadow: #2c1e14;
+    }
 
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        }
+    body.theme-cozy {
+      --bg-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=2000');
+      --overlay-bg: rgba(43, 30, 22, 0.8);
+      --card-bg: rgba(61, 44, 34, 0.9);
+      --text-main: #fef3c7;
+      --text-muted: #fde68a;
+      --accent-color: #d97706;
+      --shelf-wood: #6b4226;
+      --shelf-shadow: #3b2211;
+    }
 
-        .glass-nav-dark {
-            background: rgba(15, 23, 42, 0.88);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    body.theme-cosmic {
+      --bg-image: url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&q=80&w=2000');
+      --overlay-bg: rgba(15, 23, 42, 0.82);
+      --card-bg: rgba(30, 41, 59, 0.9);
+      --text-main: #f1f5f9;
+      --text-muted: #cbd5e1;
+      --accent-color: #8b5cf6;
+      --shelf-wood: #334155;
+      --shelf-shadow: #0f172a;
+    }
 
-        .book-shelf {
-            border-bottom: 12px solid #8b5a2b;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            position: relative;
-        }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-main);
+      transition: all 0.4s ease;
+    }
 
-        .book-shelf::after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: rgba(0,0,0,0.15);
-            filter: blur(2px);
-        }
+    .font-serif-title {
+      font-family: 'Cinzel', serif;
+    }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(100, 116, 139, 0.4);
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(100, 116, 139, 0.7);
-        }
+    .glass-panel {
+      background: var(--overlay-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        /* Animated Floating Leaves Accent */
-        @keyframes floatLeaf {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(4deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-        .animate-float {
-            animation: floatLeaf 6s ease-in-out infinite;
-        }
-    </style>
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Traditional Wooden Bookshelf Styles */
+    .wooden-shelf {
+      position: relative;
+      margin-bottom: 3rem;
+      padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .wooden-shelf-ledge {
+      position: relative;
+      height: 22px;
+      width: calc(100% + 2rem);
+      left: -1rem;
+      background: linear-gradient(180deg, var(--shelf-wood) 0%, var(--shelf-shadow) 100%);
+      border-radius: 4px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.35), inset 0 2px 2px rgba(255,255,255,0.2);
+      margin-top: 0.5rem;
+    }
+
+    .wooden-shelf-ledge::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--shelf-wood);
+      filter: brightness(1.2);
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* Leaves Overlays (Visual Enhancements based on uploaded styles) */
+    .botanical-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 4px;
+    }
+  </style>
 </head>
-<body id="app-body" class="bg-cover bg-fixed bg-center min-h-screen text-slate-800 transition-all duration-500">
+<body class="theme-botanical min-h-screen relative pb-12">
 
-    <!-- Background Decorator Layers (SVG Overlays matching user uploaded themes) -->
-    <div id="theme-overlay-eucalyptus" class="fixed inset-0 pointer-events-none z-0 hidden">
-        <!-- Top Left Eucalyptus Branch -->
-        <svg class="absolute top-0 left-0 w-80 md:w-96 text-emerald-800/20" viewBox="0 0 300 300" fill="currentColor">
-            <path d="M10,10 Q120,50 200,180 Q180,120 280,220" stroke="currentColor" stroke-width="4" fill="none"/>
-            <circle cx="60" cy="30" r="18" fill="#a7f3d0" opacity="0.6"/>
-            <circle cx="110" cy="55" r="22" fill="#6ee7b7" opacity="0.7"/>
-            <circle cx="150" cy="100" r="25" fill="#34d399" opacity="0.6"/>
-            <circle cx="185" cy="155" r="20" fill="#10b981" opacity="0.5"/>
-            <circle cx="40" cy="80" r="15" fill="#a7f3d0" opacity="0.5" class="animate-float"/>
-            <circle cx="230" cy="200" r="16" fill="#059669" opacity="0.4"/>
-        </svg>
-        <!-- Soft Leaves Floating Right Side -->
-        <svg class="absolute bottom-12 right-12 w-48 text-emerald-700/25 animate-float" viewBox="0 0 100 100" fill="currentColor">
-            <ellipse cx="30" cy="40" rx="15" ry="25" transform="rotate(-30 30 40)" fill="#059669"/>
-            <ellipse cx="65" cy="65" rx="12" ry="20" transform="rotate(20 65 65)" fill="#10b981"/>
-        </svg>
-    </div>
+  <!-- Botanical Decorative Overlay -->
+  <svg class="botanical-overlay" xmlns="http://www.w3.org/2000/svg">
+    <!-- Hanging Vine Graphic (Top Left) -->
+    <path d="M 0,0 Q 120,80 250,20 Q 350,150 180,280" fill="none" stroke="#2d6a4f" stroke-width="3" opacity="0.4"/>
+    <circle cx="120" cy="80" r="12" fill="#52b788" opacity="0.3"/>
+    <circle cx="250" cy="20" r="16" fill="#40916c" opacity="0.3"/>
+    <circle cx="180" cy="280" r="20" fill="#2d6a4f" opacity="0.3"/>
+  </svg>
 
-    <div id="theme-overlay-jungle" class="fixed inset-0 pointer-events-none z-0 hidden">
-        <!-- Top Canopy Foliage -->
-        <svg class="absolute top-0 inset-x-0 w-full h-40 text-emerald-900/30" preserveAspectRatio="none" viewBox="0 0 1200 120" fill="currentColor">
-            <path d="M0,0 L1200,0 L1200,40 C1000,100 900,20 800,90 C700,30 600,110 500,40 C400,100 300,20 200,80 C100,30 0,90 Z"/>
-        </svg>
-        <svg class="absolute top-0 right-0 w-72 md:w-96 text-emerald-950/20" viewBox="0 0 300 300" fill="currentColor">
-            <path d="M150,0 Q220,100 300,180 Q200,160 100,300" stroke="#15803d" stroke-width="6" fill="none"/>
-            <path d="M180,40 Q250,50 290,120 Q210,110 180,40 Z" fill="#166534"/>
-            <path d="M120,80 Q190,110 210,210 Q140,170 120,80 Z" fill="#15803d"/>
-        </svg>
-    </div>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
 
-    <!-- App Header & Controls Nav -->
-    <header id="main-nav" class="glass-nav sticky top-0 z-30 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            
-            <!-- Logo & Title -->
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30">
-                    <i class="fa-solid font-bold fa-book-open text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight serif text-slate-900" id="app-title">Lumina Library</h1>
-                    <p class="text-xs text-slate-500 font-medium hidden sm:block" id="app-subtitle">Curate your personal collection with custom atmosphere</p>
-                </div>
-            </div>
-
-            <!-- Action Controls -->
-            <div class="flex items-center space-x-2 sm:space-x-4">
-                <!-- Search Box -->
-                <div class="relative hidden md:block w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search title, author, genre..." 
-                        class="w-full pl-9 pr-4 py-1.5 text-sm rounded-lg bg-white/60 border border-slate-300/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
-                </div>
-
-                <!-- Theme Customizer Modal Trigger -->
-                <button onclick="toggleThemeModal()" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium transition shadow-md shadow-emerald-600/20">
-                    <i class="fa-solid fa-palette"></i>
-                    <span class="hidden sm:inline">Wallpaper Themes</span>
-                </button>
-
-                <!-- Add Book Button -->
-                <button onclick="openBookModal()" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium transition shadow-md">
-                    <i class="fa-solid fa-plus"></i>
-                    <span class="hidden sm:inline">Add Book</span>
-                </button>
-            </div>
+    <!-- Header / Navigation Bar -->
+    <header class="glass-panel rounded-2xl p-4 sm:p-6 mb-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-3 rounded-xl bg-emerald-600 text-white shadow-lg">
+          <i class="fa-solid fa-book-bookmark text-2xl"></i>
         </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold font-serif-title tracking-wide">Lumina Library</h1>
+          <p class="text-xs sm:text-sm text-muted">Organize, Discover & Collect Your Personal Volumes</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="openAddBookModal()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> Add Book
+        </button>
+        <button onclick="openScannerModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
+          <i class="fa-solid fa-barcode"></i> Scan ISBN
+        </button>
+        <button onclick="openThemeModal()" class="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
+          <i class="fa-solid fa-palette"></i> Wallpaper Themes
+        </button>
+      </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- Quick Stats Overview Bar -->
-        <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div id="stat-card-1" class="glass-card p-4 rounded-xl shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-emerald-100 text-emerald-700 rounded-lg">
-                    <i class="fa-solid fa-books text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Total Books</p>
-                    <p id="stat-total" class="text-2xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
+    <!-- Controls & Search Toolbar -->
+    <div class="glass-panel rounded-2xl p-4 mb-8 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
+      <!-- Search Input -->
+      <div class="relative w-full md:w-96">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        <input type="text" id="searchInput" oninput="renderLibrary()" placeholder="Search titles, authors, ISBNs..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/70 dark:bg-black/20 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+      </div>
 
-            <div id="stat-card-2" class="glass-card p-4 rounded-xl shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-blue-100 text-blue-700 rounded-lg">
-                    <i class="fa-solid fa-book-reader text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Currently Reading</p>
-                    <p id="stat-reading" class="text-2xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
+      <!-- Filters & Shelf Selector -->
+      <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+        <select id="shelfFilter" onchange="renderLibrary()" class="px-3 py-2 rounded-xl bg-white/70 dark:bg-black/20 border border-gray-300 dark:border-gray-700 text-sm font-medium focus:outline-none">
+          <option value="all">All Shelves</option>
+          <option value="currently-reading">Currently Reading</option>
+          <option value="want-to-read">Want to Read</option>
+          <option value="completed">Completed</option>
+          <option value="favorites">Favorites</option>
+        </select>
 
-            <div id="stat-card-3" class="glass-card p-4 rounded-xl shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-amber-100 text-amber-700 rounded-lg">
-                    <i class="fa-solid fa-circle-check text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Completed</p>
-                    <p id="stat-completed" class="text-2xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
+        <select id="sortSelect" onchange="renderLibrary()" class="px-3 py-2 rounded-xl bg-white/70 dark:bg-black/20 border border-gray-300 dark:border-gray-700 text-sm font-medium focus:outline-none">
+          <option value="recent">Recently Added</option>
+          <option value="title">Title (A-Z)</option>
+          <option value="author">Author (A-Z)</option>
+        </select>
+      </div>
+    </div>
 
-            <div id="stat-card-4" class="glass-card p-4 rounded-xl shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-purple-100 text-purple-700 rounded-lg">
-                    <i class="fa-solid fa-heart text-lg"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Favorites</p>
-                    <p id="stat-favorites" class="text-2xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Bookshelf Container -->
-        <section id="shelf-section" class="glass-card rounded-2xl p-6 shadow-xl mb-12 transition-all">
-            <!-- Filter & View Bar -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-slate-200/50 gap-4">
-                <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0">
-                    <button onclick="setFilter('all')" class="filter-btn active-filter px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white shadow-sm transition">All Books</button>
-                    <button onclick="setFilter('reading')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-200/80 hover:bg-slate-300/80 text-slate-700 transition">Reading</button>
-                    <button onclick="setFilter('completed')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-200/80 hover:bg-slate-300/80 text-slate-700 transition">Completed</button>
-                    <button onclick="setFilter('wishlist')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-200/80 hover:bg-slate-300/80 text-slate-700 transition">Wishlist</button>
-                </div>
-
-                <div class="flex items-center space-x-3 text-xs font-medium">
-                    <label class="text-slate-500">Sort By:</label>
-                    <select id="sort-select" onchange="renderBooks()" class="bg-white/70 border border-slate-300/70 rounded-lg px-2.5 py-1.5 focus:outline-none">
-                        <option value="title">Title (A-Z)</option>
-                        <option value="rating">Rating (High-Low)</option>
-                        <option value="recent">Recently Added</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Virtual Wooden Bookshelf Display -->
-            <div id="bookshelf-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 min-h-[320px]">
-                <!-- Book Cards dynamic insertion -->
-            </div>
-
-            <!-- Empty State Display -->
-            <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
-                <div class="w-16 h-16 bg-slate-200/60 rounded-full flex items-center justify-center text-slate-400 mb-4">
-                    <i class="fa-solid fa-book-open text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-700 mb-1">No books found in this view</h3>
-                <p class="text-xs text-slate-500 max-w-sm mb-4">Add new books to your personal library or adjust your active filters.</p>
-                <button onclick="openBookModal()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-semibold shadow hover:bg-emerald-700 transition">Add a Book</button>
-            </div>
-        </section>
+    <!-- MAIN SHELVES DISPLAY AREA -->
+    <main id="shelvesContainer" class="space-y-10">
+      <!-- Shelves dynamically rendered here with wood shelf graphics -->
     </main>
 
-    <!-- Theme Selection Wallpaper Modal -->
-    <div id="theme-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
-            <!-- Modal Header -->
-            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-palette text-emerald-400"></i>
-                    <h3 class="font-bold text-lg">Wallpaper & Aesthetic Themes</h3>
-                </div>
-                <button onclick="toggleThemeModal()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
+  </div>
 
-            <!-- Theme Options Grid -->
-            <div class="p-6 overflow-y-auto space-y-6">
-                <p class="text-xs text-slate-500">Select a wallpaper style below to instantly transform your library's backdrop, atmosphere, and card glassmorphism overlays.</p>
+  <!-- ADD / EDIT BOOK MODAL -->
+  <div id="addBookModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="glass-card max-w-xl w-full rounded-2xl p-6 shadow-2xl border border-white/30 relative my-8">
+      <button onclick="closeAddBookModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    
-                    <!-- Theme 1: Eucalyptus / Minimal Leaf (Image 1 reference) -->
-                    <div onclick="applyTheme('eucalyptus')" class="theme-card cursor-pointer group relative rounded-xl border-2 border-slate-200 overflow-hidden hover:border-emerald-500 transition p-3 bg-stone-50 flex flex-col justify-between h-36">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-80" style="background-image: url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800&q=80');"></div>
-                        <div class="relative z-10 flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-600 text-white">Botanical</span>
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-lg opacity-0 group-[.selected]:opacity-100 transition"></i>
-                        </div>
-                        <div class="relative z-10 bg-white/80 backdrop-blur-sm p-2 rounded-lg">
-                            <h4 class="font-bold text-sm text-slate-800">Eucalyptus & Minimal Leaf</h4>
-                            <p class="text-[11px] text-slate-600">Soft cream, floating leaves & calm greens</p>
-                        </div>
-                    </div>
+      <h2 class="text-2xl font-bold font-serif-title mb-4" id="modalTitle">Add New Volume</h2>
 
-                    <!-- Theme 2: Jungle & Tropical Canopy (Image 2 reference) -->
-                    <div onclick="applyTheme('jungle')" class="theme-card cursor-pointer group relative rounded-xl border-2 border-slate-200 overflow-hidden hover:border-emerald-500 transition p-3 bg-emerald-950 flex flex-col justify-between h-36">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-80" style="background-image: url('https://images.unsplash.com/photo-1516214104703-d870798883c5?auto=format&fit=crop&w=800&q=80');"></div>
-                        <div class="relative z-10 flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-700 text-white">Rainforest</span>
-                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg opacity-0 group-[.selected]:opacity-100 transition"></i>
-                        </div>
-                        <div class="relative z-10 bg-slate-900/80 backdrop-blur-sm p-2 rounded-lg text-white">
-                            <h4 class="font-bold text-sm">Deep Jungle Canopy</h4>
-                            <p class="text-[11px] text-emerald-200">Vibrant tropical leaves & sunlight rays</p>
-                        </div>
-                    </div>
+      <form id="bookForm" onsubmit="handleBookFormSubmit(event)" class="space-y-4">
+        <input type="hidden" id="bookId">
 
-                    <!-- Theme 3: Warm Wood & Coffee House -->
-                    <div onclick="applyTheme('wood')" class="theme-card cursor-pointer group relative rounded-xl border-2 border-slate-200 overflow-hidden hover:border-amber-600 transition p-3 bg-amber-950 flex flex-col justify-between h-36">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-80" style="background-image: url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80');"></div>
-                        <div class="relative z-10 flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-700 text-white">Cozy</span>
-                        </div>
-                        <div class="relative z-10 bg-amber-950/80 backdrop-blur-sm p-2 rounded-lg text-amber-100">
-                            <h4 class="font-bold text-sm">Cozy Coffee & Oak</h4>
-                            <p class="text-[11px] text-amber-300">Warm wood grain, rich leather & amber tones</p>
-                        </div>
-                    </div>
-
-                    <!-- Theme 4: Dark Celestial / Space -->
-                    <div onclick="applyTheme('celestial')" class="theme-card cursor-pointer group relative rounded-xl border-2 border-slate-200 overflow-hidden hover:border-indigo-500 transition p-3 bg-slate-950 flex flex-col justify-between h-36">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-80" style="background-image: url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=800&q=80');"></div>
-                        <div class="relative z-10 flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-indigo-700 text-white">Celestial</span>
-                        </div>
-                        <div class="relative z-10 bg-slate-950/80 backdrop-blur-sm p-2 rounded-lg text-indigo-100">
-                            <h4 class="font-bold text-sm">Midnight Starfield</h4>
-                            <p class="text-[11px] text-indigo-300">Deep cosmic dark, stardust & glowing glass</p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Custom Image URL Input -->
-                <div class="border-t border-slate-200 pt-4">
-                    <label class="block text-xs font-bold text-slate-700 mb-2">Custom Image Wallpaper URL</label>
-                    <div class="flex space-x-2">
-                        <input type="url" id="custom-bg-url" placeholder="https://images.unsplash.com/your-wallpaper.jpg" class="flex-1 px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <button onclick="applyCustomUrlTheme()" class="px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition">Apply URL</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-right">
-                <button onclick="toggleThemeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-300 transition">Close</button>
-            </div>
+        <!-- Title & ISBN Search Row -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Book Title</label>
+          <div class="flex gap-2">
+            <input type="text" id="bookTitle" required placeholder="e.g. The Great Gatsby" class="flex-1 px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none">
+            <button type="button" onclick="searchCoverByMetadata()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-cloud-arrow-down"></i> Fetch Details/Covers
+            </button>
+          </div>
         </div>
-    </div>
 
-    <!-- Add/Edit Book Modal -->
-    <div id="book-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden border border-slate-100">
-            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-                <h3 id="modal-book-title" class="font-bold text-lg">Add New Book</h3>
-                <button onclick="closeBookModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Author</label>
+            <input type="text" id="bookAuthor" required placeholder="e.g. F. Scott Fitzgerald" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">ISBN</label>
+            <input type="text" id="bookIsbn" placeholder="e.g. 9780743273565" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
+          </div>
+        </div>
+
+        <!-- Cover Image URL & Cover Search Results -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Cover Image URL</label>
+          <input type="url" id="bookCover" placeholder="https://..." class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none mb-2">
+
+          <!-- Dynamic Cover Options Carousel/Grid -->
+          <div id="coverSearchResults" class="hidden">
+            <p class="text-xs text-muted mb-2 font-medium">Select an automatically found cover image:</p>
+            <div id="coverResultsGrid" class="flex gap-3 overflow-x-auto pb-2"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Shelf / Status</label>
+            <select id="bookShelf" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
+              <option value="currently-reading">Currently Reading</option>
+              <option value="want-to-read">Want to Read</option>
+              <option value="completed">Completed</option>
+              <option value="favorites">Favorites</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Personal Rating</label>
+            <select id="bookRating" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
+              <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+              <option value="4">⭐⭐⭐⭐ (4/5)</option>
+              <option value="3">⭐⭐⭐ (3/5)</option>
+              <option value="2">⭐⭐ (2/5)</option>
+              <option value="1">⭐ (1/5)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Notes / Review</label>
+          <textarea id="bookNotes" rows="3" placeholder="Thoughts, favorite quotes, or reading progress..." class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" onclick="closeAddBookModal()" class="px-4 py-2 rounded-xl border border-gray-400 text-xs font-medium hover:bg-black/5">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-md">Save Book</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- THEME SELECTOR MODAL -->
+  <div id="themeModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full rounded-2xl p-6 shadow-2xl border border-white/30 relative">
+      <button onclick="closeThemeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="text-2xl font-bold font-serif-title mb-2">Wallpaper Themes</h2>
+      <p class="text-xs text-muted mb-6">Choose an immersive wallpaper ambiance for your bookshelves.</p>
+
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <button onclick="setTheme('theme-botanical')" class="p-3 rounded-xl border-2 border-emerald-600/50 bg-emerald-900/20 text-left hover:border-emerald-500 transition">
+          <div class="h-16 rounded-lg bg-cover bg-center mb-2" style="background-image: url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&q=80&w=400');"></div>
+          <span class="text-sm font-bold block">Botanical Mint</span>
+          <span class="text-[10px] opacity-75">Soft leaves & bright eucalyptus</span>
+        </button>
+
+        <button onclick="setTheme('theme-jungle')" class="p-3 rounded-xl border-2 border-emerald-600/50 bg-green-950/20 text-left hover:border-emerald-500 transition">
+          <div class="h-16 rounded-lg bg-cover bg-center mb-2" style="background-image: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=400');"></div>
+          <span class="text-sm font-bold block">Deep Canopy</span>
+          <span class="text-[10px] opacity-75">Lush rainforest & deep greens</span>
+        </button>
+
+        <button onclick="setTheme('theme-cozy')" class="p-3 rounded-xl border-2 border-amber-600/50 bg-amber-950/20 text-left hover:border-amber-500 transition">
+          <div class="h-16 rounded-lg bg-cover bg-center mb-2" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=400');"></div>
+          <span class="text-sm font-bold block">Cozy Study</span>
+          <span class="text-[10px] opacity-75">Warm ambient library tones</span>
+        </button>
+
+        <button onclick="setTheme('theme-cosmic')" class="p-3 rounded-xl border-2 border-purple-600/50 bg-slate-900/20 text-left hover:border-purple-500 transition">
+          <div class="h-16 rounded-lg bg-cover bg-center mb-2" style="background-image: url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&q=80&w=400');"></div>
+          <span class="text-sm font-bold block">Cosmic Observatory</span>
+          <span class="text-[10px] opacity-75">Starfields & midnight indigo</span>
+        </button>
+      </div>
+
+      <!-- Custom Wallpaper Input -->
+      <div class="border-t border-gray-500/30 pt-4">
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-2">Custom Image Wallpaper URL</label>
+        <div class="flex gap-2">
+          <input type="url" id="customBgUrl" placeholder="https://images.unsplash.com/..." class="flex-1 px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
+          <button onclick="applyCustomTheme()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARCODE SCANNER MODAL -->
+  <div id="scannerModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full rounded-2xl p-6 shadow-2xl relative text-center">
+      <button onclick="closeScannerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="text-xl font-bold font-serif-title mb-2">Scan ISBN Barcode</h2>
+      <p class="text-xs text-muted mb-4">Position the book's ISBN barcode within the camera viewfinder.</p>
+
+      <div id="interactive" class="viewport w-full h-64 bg-black rounded-xl overflow-hidden relative border border-white/20"></div>
+
+      <p id="scannerStatus" class="text-xs text-amber-500 font-medium mt-3">Initializing camera...</p>
+    </div>
+  </div>
+
+  <script>
+    // Initial Sample Books
+    const initialBooks = [
+      {
+        id: "1",
+        title: "The Overstory",
+        author: "Richard Powers",
+        isbn: "9780393356687",
+        cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1516211014i/36608072.jpg",
+        shelf: "currently-reading",
+        rating: 5,
+        notes: "A beautiful, sprawling ode to trees and human connection."
+      },
+      {
+        id: "2",
+        title: "The Secret Life of Plants",
+        author: "Peter Tompkins",
+        isbn: "9780060915872",
+        cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1388194452i/202670.jpg",
+        shelf: "favorites",
+        rating: 5,
+        notes: "Fascinating perspective on physical and emotional relations between plants and human beings."
+      },
+      {
+        id: "3",
+        title: "Dune",
+        author: "Frank Herbert",
+        isbn: "9780441172719",
+        cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg",
+        shelf: "completed",
+        rating: 5,
+        notes: "Masterpiece of world-building."
+      }
+    ];
+
+    let books = JSON.parse(localStorage.getItem('lumina_books')) || initialBooks;
+
+    // Save to LocalStorage
+    function saveBooks() {
+      localStorage.setItem('lumina_books', JSON.stringify(books));
+    }
+
+    // Render Library with Shelves & Wooden Ledge Graphics
+    function renderLibrary() {
+      const container = document.getElementById('shelvesContainer');
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const selectedShelf = document.getElementById('shelfFilter').value;
+      const sortBy = document.getElementById('sortSelect').value;
+
+      container.innerHTML = '';
+
+      const shelfCategories = [
+        { id: 'currently-reading', title: 'Currently Reading', icon: 'fa-book-open' },
+        { id: 'want-to-read', title: 'Want to Read', icon: 'fa-bookmark' },
+        { id: 'completed', title: 'Completed', icon: 'fa-circle-check' },
+        { id: 'favorites', title: 'Favorites', icon: 'fa-star' }
+      ];
+
+      const activeCategories = selectedShelf === 'all' 
+        ? shelfCategories 
+        : shelfCategories.filter(c => c.id === selectedShelf);
+
+      activeCategories.forEach(category => {
+        let categoryBooks = books.filter(b => b.shelf === category.id);
+
+        // Search Filter
+        if (searchQuery) {
+          categoryBooks = categoryBooks.filter(b => 
+            b.title.toLowerCase().includes(searchQuery) ||
+            b.author.toLowerCase().includes(searchQuery) ||
+            (b.isbn && b.isbn.includes(searchQuery))
+          );
+        }
+
+        // Sorting
+        if (sortBy === 'title') {
+          categoryBooks.sort((a,b) => a.title.localeCompare(b.title));
+        } else if (sortBy === 'author') {
+          categoryBooks.sort((a,b) => a.author.localeCompare(b.author));
+        }
+
+        if (categoryBooks.length === 0 && selectedShelf !== 'all') {
+          container.innerHTML = `<div class="text-center py-12 glass-panel rounded-2xl"><p class="text-muted">No volumes found in this section.</p></div>`;
+          return;
+        }
+
+        if (categoryBooks.length === 0 && searchQuery) return;
+
+        // Render Shelf Section
+        const shelfElem = document.createElement('section');
+        shelfElem.className = 'wooden-shelf glass-panel rounded-2xl shadow-xl';
+
+        let booksHTML = categoryBooks.map(book => `
+          <div class="group relative flex-none w-36 sm:w-44 flex flex-col justify-end transition transform hover:-translate-y-2 duration-300">
+            <!-- Book Cover Container -->
+            <div class="relative aspect-[2/3] rounded-md overflow-hidden shadow-2xl border border-white/20 bg-gray-800">
+              <img src="${book.cover || 'https://via.placeholder.com/150x225?text=No+Cover'}" alt="${book.title}" class="w-full h-full object-cover">
+              
+              <!-- Hover Overlay with Actions -->
+              <div class="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition duration-200 flex flex-col justify-between p-3 text-white">
+                <div>
+                  <h4 class="font-bold text-xs line-clamp-2">${book.title}</h4>
+                  <p class="text-[10px] text-gray-300 mt-1">${book.author}</p>
+                  <p class="text-[10px] text-amber-400 mt-1">${'★'.repeat(book.rating)}</p>
+                </div>
+                <div class="flex justify-between items-center pt-2 border-t border-white/20">
+                  <button onclick="editBook('${book.id}')" class="text-xs text-emerald-400 hover:text-emerald-300"><i class="fa-solid fa-pen"></i> Edit</button>
+                  <button onclick="deleteBook('${book.id}')" class="text-xs text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
             </div>
 
-            <form id="book-form" onsubmit="saveBook(event)" class="p-6 space-y-4">
-                <input type="hidden" id="book-id">
-                
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Book Title *</label>
-                    <input type="text" id="input-title" required placeholder="e.g. The Secret Life of Plants" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                </div>
+            <!-- Title Label below book -->
+            <div class="mt-2 text-center">
+              <p class="text-xs font-bold line-clamp-1">${book.title}</p>
+              <p class="text-[10px] text-muted line-clamp-1">${book.author}</p>
+            </div>
+          </div>
+        `).join('');
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Author *</label>
-                        <input type="text" id="input-author" required placeholder="e.g. Peter Tompkins" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Category / Genre</label>
-                        <input type="text" id="input-genre" placeholder="e.g. Botany, Fiction" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                    </div>
-                </div>
+        if (categoryBooks.length === 0) {
+          booksHTML = `<p class="text-xs text-muted italic py-6">Shelf empty. Add a book or drag one here.</p>`;
+        }
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status</label>
-                        <select id="input-status" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            <option value="reading">Currently Reading</option>
-                            <option value="completed">Completed</option>
-                            <option value="wishlist">Wishlist</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Rating (1-5)</label>
-                        <select id="input-rating" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                            <option value="3">⭐⭐⭐ (3/5)</option>
-                            <option value="2">⭐⭐ (2/5)</option>
-                            <option value="1">⭐ (1/5)</option>
-                        </select>
-                    </div>
-                </div>
+        shelfElem.innerHTML = `
+          <div class="flex items-center gap-2 mb-4 border-b border-gray-500/20 pb-2">
+            <i class="fa-solid ${category.icon} text-emerald-500"></i>
+            <h3 class="text-lg font-bold font-serif-title">${category.title}</h3>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 font-semibold ml-2">${categoryBooks.length}</span>
+          </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Cover Image URL</label>
-                    <input type="url" id="input-cover" placeholder="https://images.unsplash.com/... or leave blank for color placeholder" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                </div>
+          <!-- Horizontal Books Row -->
+          <div class="flex gap-6 overflow-x-auto pb-4 pt-2 px-2 items-end min-h-[220px]">
+            ${booksHTML}
+          </div>
 
-                <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200">
-                    <button type="button" onclick="closeBookModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition">Cancel</button>
-                    <button type="submit" class="px-5 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 shadow transition">Save Book</button>
-                </div>
-            </form>
-        </div>
-    </div>
+          <!-- Traditional Wooden Ledge Graphic -->
+          <div class="wooden-shelf-ledge"></div>
+        `;
 
-    <script>
-        // Default seed data including botanically inspired books matching user imagery
-        const defaultBooks = [
-            {
-                id: '1',
-                title: 'The Secret Life of Plants',
-                author: 'Peter Tompkins',
-                genre: 'Botany & Nature',
-                status: 'reading',
-                rating: 5,
-                cover: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80'
-            },
-            {
-                id: '2',
-                title: 'Jungle Ways & Tropical Flora',
-                author: 'William Seabrook',
-                genre: 'Exploration',
-                status: 'completed',
-                rating: 4,
-                cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80'
-            },
-            {
-                id: '3',
-                title: 'Braiding Sweetgrass',
-                author: 'Robin Wall Kimmerer',
-                genre: 'Nature & Science',
-                status: 'completed',
-                rating: 5,
-                cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=400&q=80'
-            },
-            {
-                id: '4',
-                title: 'The Overstory',
-                author: 'Richard Powers',
-                genre: 'Fiction',
-                status: 'wishlist',
-                rating: 5,
-                cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80'
+        container.appendChild(shelfElem);
+      });
+    }
+
+    // COVER SEARCH VIA GOOGLE BOOKS / OPEN LIBRARY API
+    async function searchCoverByMetadata() {
+      const title = document.getElementById('bookTitle').value.trim();
+      const isbn = document.getElementById('bookIsbn').value.trim();
+      const resultsContainer = document.getElementById('coverSearchResults');
+      const resultsGrid = document.getElementById('coverResultsGrid');
+
+      if (!title && !isbn) {
+        alert("Please enter a Title or ISBN first to search for covers.");
+        return;
+      }
+
+      resultsContainer.classList.remove('hidden');
+      resultsGrid.innerHTML = `<p class="text-xs text-muted animate-pulse">Searching book covers...</p>`;
+
+      let covers = [];
+
+      try {
+        // Query Open Library / Google Books
+        const query = isbn ? `isbn:${isbn}` : `intitle:${encodeURIComponent(title)}`;
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=5`);
+        const data = await res.json();
+
+        if (data.items) {
+          data.items.forEach(item => {
+            const imageLinks = item.volumeInfo?.imageLinks;
+            if (imageLinks) {
+              const coverUrl = imageLinks.extraLarge || imageLinks.large || imageLinks.medium || imageLinks.thumbnail;
+              if (coverUrl) covers.push(coverUrl.replace('http://', 'https://'));
             }
-        ];
-
-        // State variables
-        let books = JSON.parse(localStorage.getItem('lumina_books')) || defaultBooks;
-        let activeFilter = 'all';
-        let searchQuery = '';
-        let currentTheme = localStorage.getItem('lumina_theme') || 'eucalyptus';
-
-        // Predefined Themes Configuration
-        const themeConfigs = {
-            eucalyptus: {
-                bgImage: "url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1920&q=80')",
-                bgColor: "#f4f7f4",
-                isDark: false,
-                overlayId: 'theme-overlay-eucalyptus'
-            },
-            jungle: {
-                bgImage: "url('https://images.unsplash.com/photo-1516214104703-d870798883c5?auto=format&fit=crop&w=1920&q=80')",
-                bgColor: "#062315",
-                isDark: true,
-                overlayId: 'theme-overlay-jungle'
-            },
-            wood: {
-                bgImage: "url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1920&q=80')",
-                bgColor: "#1c100b",
-                isDark: true,
-                overlayId: null
-            },
-            celestial: {
-                bgImage: "url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=80')",
-                bgColor: "#090d16",
-                isDark: true,
-                overlayId: null
+            if (item.volumeInfo?.title && !document.getElementById('bookTitle').value) {
+              document.getElementById('bookTitle').value = item.volumeInfo.title;
             }
-        };
-
-        function applyTheme(themeKey, customUrl = null) {
-            currentTheme = themeKey;
-            localStorage.setItem('lumina_theme', themeKey);
-
-            // Hide all SVG overlays
-            document.querySelectorAll('[id^="theme-overlay-"]').forEach(el => el.classList.add('hidden'));
-
-            const body = document.getElementById('app-body');
-            const nav = document.getElementById('main-nav');
-            const shelf = document.getElementById('shelf-section');
-            const statCards = [1, 2, 3, 4].map(id => document.getElementById(`stat-card-${id}`));
-
-            let config = themeConfigs[themeKey];
-
-            if (customUrl) {
-                body.style.backgroundImage = `url('${customUrl}')`;
-                config = { isDark: false }; // Default neutral UI for custom images
-            } else if (config) {
-                body.style.backgroundImage = config.bgImage;
-                body.style.backgroundColor = config.bgColor;
-                if (config.overlayId) {
-                    const overlay = document.getElementById(config.overlayId);
-                    if (overlay) overlay.classList.remove('hidden');
-                }
+            if (item.volumeInfo?.authors && !document.getElementById('bookAuthor').value) {
+              document.getElementById('bookAuthor').value = item.volumeInfo.authors.join(', ');
             }
-
-            // Adjust UI component brightness / glassmorphism based on theme theme tone
-            if (config && config.isDark) {
-                nav.className = "glass-nav-dark sticky top-0 z-30 text-white transition-colors duration-300";
-                document.getElementById('app-title').className = "text-xl font-bold tracking-tight serif text-white";
-                document.getElementById('app-subtitle').className = "text-xs text-slate-300 font-medium hidden sm:block";
-                shelf.className = "glass-card-dark rounded-2xl p-6 shadow-xl mb-12 text-white transition-all";
-                statCards.forEach(card => card.className = "glass-card-dark p-4 rounded-xl shadow-sm flex items-center space-x-4 text-white");
-            } else {
-                nav.className = "glass-nav sticky top-0 z-30 text-slate-800 transition-colors duration-300";
-                document.getElementById('app-title').className = "text-xl font-bold tracking-tight serif text-slate-900";
-                document.getElementById('app-subtitle').className = "text-xs text-slate-500 font-medium hidden sm:block";
-                shelf.className = "glass-card rounded-2xl p-6 shadow-xl mb-12 transition-all";
-                statCards.forEach(card => card.className = "glass-card p-4 rounded-xl shadow-sm flex items-center space-x-4");
-            }
-
-            renderBooks();
+          });
         }
 
-        function applyCustomUrlTheme() {
-            const urlInput = document.getElementById('custom-bg-url').value.trim();
-            if (urlInput) {
-                applyTheme('custom', urlInput);
-                toggleThemeModal();
-            }
+        // OpenLibrary fallback covers
+        if (isbn) {
+          covers.push(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`);
         }
 
-        function renderBooks() {
-            const grid = document.getElementById('bookshelf-grid');
-            const emptyState = document.getElementById('empty-state');
-            const sortVal = document.getElementById('sort-select').value;
-
-            // Filter logic
-            let filtered = books.filter(book => {
-                const matchesFilter = activeFilter === 'all' || book.status === activeFilter;
-                const matchesSearch = book.title.toLowerCase().includes(searchQuery) || 
-                                      book.author.toLowerCase().includes(searchQuery) ||
-                                      book.genre.toLowerCase().includes(searchQuery);
-                return matchesFilter && matchesSearch;
-            });
-
-            // Sorting logic
-            filtered.sort((a, b) => {
-                if (sortVal === 'title') return a.title.localeCompare(b.title);
-                if (sortVal === 'rating') return b.rating - a.rating;
-                return b.id - a.id;
-            });
-
-            grid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-            } else {
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
-
-                filtered.forEach(book => {
-                    const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
-                    const coverBg = book.cover ? `url('${book.cover}')` : 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-
-                    const bookCard = document.createElement('div');
-                    bookCard.className = "group relative flex flex-col justify-between rounded-xl overflow-hidden shadow-lg transition-transform hover:-translate-y-2 duration-300 bg-white/90 border border-slate-200/60";
-                    bookCard.style.height = "260px";
-
-                    bookCard.innerHTML = `
-                        <!-- Cover Image Background -->
-                        <div class="h-44 w-full bg-cover bg-center relative p-2 flex flex-col justify-between" style="background-image: ${coverBg}">
-                            <div class="flex justify-between items-start">
-                                <span class="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded bg-black/60 text-white backdrop-blur-sm">${book.status}</span>
-                                <button onclick="deleteBook('${book.id}')" class="opacity-0 group-hover:opacity-100 transition text-white bg-red-600/80 hover:bg-red-600 w-6 h-6 rounded-full flex items-center justify-center text-xs shadow">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Details Overlay -->
-                        <div class="p-3 bg-white/95 backdrop-blur-md flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="font-bold text-xs text-slate-800 line-clamp-1">${book.title}</h4>
-                                <p class="text-[11px] text-slate-500 line-clamp-1">${book.author}</p>
-                            </div>
-                            <div class="flex items-center justify-between pt-1 border-t border-slate-100">
-                                <span class="text-amber-500 text-[10px] tracking-tighter">${stars}</span>
-                                <button onclick="editBook('${book.id}')" class="text-slate-400 hover:text-emerald-600 text-xs">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(bookCard);
-                });
-            }
-
-            updateStats();
-            saveToStorage();
+        if (covers.length > 0) {
+          resultsGrid.innerHTML = covers.map(url => `
+            <img src="${url}" onclick="selectCover('${url}')" class="h-24 w-16 object-cover rounded shadow cursor-pointer border-2 border-transparent hover:border-emerald-500 transition">
+          `).join('');
+        } else {
+          resultsGrid.innerHTML = `<p class="text-xs text-rose-500">No cover images found for this search.</p>`;
         }
 
-        function updateStats() {
-            document.getElementById('stat-total').innerText = books.length;
-            document.getElementById('stat-reading').innerText = books.filter(b => b.status === 'reading').length;
-            document.getElementById('stat-completed').innerText = books.filter(b => b.status === 'completed').length;
-            document.getElementById('stat-favorites').innerText = books.filter(b => b.rating == 5).length;
+      } catch (err) {
+        resultsGrid.innerHTML = `<p class="text-xs text-rose-500">Error fetching covers. Please paste a direct image URL.</p>`;
+      }
+    }
+
+    function selectCover(url) {
+      document.getElementById('bookCover').value = url;
+      document.getElementById('coverSearchResults').classList.add('hidden');
+    }
+
+    // Modal Control Functions
+    function openAddBookModal() {
+      document.getElementById('bookForm').reset();
+      document.getElementById('bookId').value = '';
+      document.getElementById('modalTitle').textContent = 'Add New Volume';
+      document.getElementById('coverSearchResults').classList.add('hidden');
+      document.getElementById('addBookModal').classList.remove('hidden');
+    }
+
+    function closeAddBookModal() {
+      document.getElementById('addBookModal').classList.add('hidden');
+    }
+
+    function openThemeModal() {
+      document.getElementById('themeModal').classList.remove('hidden');
+    }
+
+    function closeThemeModal() {
+      document.getElementById('themeModal').classList.add('hidden');
+    }
+
+    // Book Form Handlers
+    function handleBookFormSubmit(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('bookId').value || Date.now().toString();
+      const title = document.getElementById('bookTitle').value;
+      const author = document.getElementById('bookAuthor').value;
+      const isbn = document.getElementById('bookIsbn').value;
+      const cover = document.getElementById('bookCover').value || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=400';
+      const shelf = document.getElementById('bookShelf').value;
+      const rating = parseInt(document.getElementById('bookRating').value);
+      const notes = document.getElementById('bookNotes').value;
+
+      const existingIndex = books.findIndex(b => b.id === id);
+
+      const bookData = { id, title, author, isbn, cover, shelf, rating, notes };
+
+      if (existingIndex > -1) {
+        books[existingIndex] = bookData;
+      } else {
+        books.unshift(bookData);
+      }
+
+      saveBooks();
+      renderLibrary();
+      closeAddBookModal();
+    }
+
+    function editBook(id) {
+      const book = books.find(b => b.id === id);
+      if (!book) return;
+
+      document.getElementById('bookId').value = book.id;
+      document.getElementById('bookTitle').value = book.title;
+      document.getElementById('bookAuthor').value = book.author;
+      document.getElementById('bookIsbn').value = book.isbn || '';
+      document.getElementById('bookCover').value = book.cover || '';
+      document.getElementById('bookShelf').value = book.shelf;
+      document.getElementById('bookRating').value = book.rating;
+      document.getElementById('bookNotes').value = book.notes || '';
+
+      document.getElementById('modalTitle').textContent = 'Edit Volume';
+      document.getElementById('addBookModal').classList.remove('hidden');
+    }
+
+    function deleteBook(id) {
+      if (confirm('Remove this volume from your library?')) {
+        books = books.filter(b => b.id !== id);
+        saveBooks();
+        renderLibrary();
+      }
+    }
+
+    // Theme Switchers
+    function setTheme(themeName) {
+      document.body.className = `min-h-screen relative pb-12 ${themeName}`;
+      document.body.style.backgroundImage = '';
+      closeThemeModal();
+    }
+
+    function applyCustomTheme() {
+      const url = document.getElementById('customBgUrl').value.trim();
+      if (url) {
+        document.body.style.backgroundImage = `url('${url}')`;
+        closeThemeModal();
+      }
+    }
+
+    // Barcode Scanner via QuaggaJS
+    function openScannerModal() {
+      document.getElementById('scannerModal').classList.remove('hidden');
+      document.getElementById('scannerStatus').textContent = "Starting camera...";
+
+      Quagga.init({
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: document.querySelector('#interactive'),
+          constraints: { facingMode: "environment" }
+        },
+        decoder: {
+          readers: ["ean_reader", "ean_8_reader"]
         }
-
-        function setFilter(filter) {
-            activeFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('bg-emerald-600', 'text-white');
-                btn.classList.add('bg-slate-200/80', 'text-slate-700');
-            });
-            event.target.classList.remove('bg-slate-200/80', 'text-slate-700');
-            event.target.classList.add('bg-emerald-600', 'text-white');
-            renderBooks();
+      }, function(err) {
+        if (err) {
+          document.getElementById('scannerStatus').textContent = "Camera access error.";
+          return;
         }
+        document.getElementById('scannerStatus').textContent = "Scanning... Hold barcode steady.";
+        Quagga.start();
+      });
 
-        function handleSearch() {
-            searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-            renderBooks();
+      Quagga.onDetected(function(result) {
+        const code = result.codeResult.code;
+        if (code) {
+          Quagga.stop();
+          closeScannerModal();
+          openAddBookModal();
+          document.getElementById('bookIsbn').value = code;
+          searchCoverByMetadata();
         }
+      });
+    }
 
-        function toggleThemeModal() {
-            const modal = document.getElementById('theme-modal');
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
-            } else {
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
+    function closeScannerModal() {
+      try { Quagga.stop(); } catch(e) {}
+      document.getElementById('scannerModal').classList.add('hidden');
+    }
 
-        function openBookModal(book = null) {
-            const modal = document.getElementById('book-modal');
-            const title = document.getElementById('modal-book-title');
-
-            if (book) {
-                title.innerText = "Edit Book Details";
-                document.getElementById('book-id').value = book.id;
-                document.getElementById('input-title').value = book.title;
-                document.getElementById('input-author').value = book.author;
-                document.getElementById('input-genre').value = book.genre || '';
-                document.getElementById('input-status').value = book.status;
-                document.getElementById('input-rating').value = book.rating;
-                document.getElementById('input-cover').value = book.cover || '';
-            } else {
-                title.innerText = "Add New Book";
-                document.getElementById('book-form').reset();
-                document.getElementById('book-id').value = '';
-            }
-
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10);
-        }
-
-        function closeBookModal() {
-            const modal = document.getElementById('book-modal');
-            modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        function saveBook(e) {
-            e.preventDefault();
-            const id = document.getElementById('book-id').value;
-            const title = document.getElementById('input-title').value;
-            const author = document.getElementById('input-author').value;
-            const genre = document.getElementById('input-genre').value;
-            const status = document.getElementById('input-status').value;
-            const rating = parseInt(document.getElementById('input-rating').value);
-            const cover = document.getElementById('input-cover').value;
-
-            if (id) {
-                const idx = books.findIndex(b => b.id === id);
-                if (idx !== -1) {
-                    books[idx] = { id, title, author, genre, status, rating, cover };
-                }
-            } else {
-                books.push({
-                    id: Date.now().toString(),
-                    title,
-                    author,
-                    genre,
-                    status,
-                    rating,
-                    cover
-                });
-            }
-
-            closeBookModal();
-            renderBooks();
-        }
-
-        function editBook(id) {
-            const book = books.find(b => b.id === id);
-            if (book) openBookModal(book);
-        }
-
-        function deleteBook(id) {
-            books = books.filter(b => b.id !== id);
-            renderBooks();
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('lumina_books', JSON.stringify(books));
-        }
-
-        window.onload = function() {
-            applyTheme(currentTheme);
-        };
-    </script>
+    // Initial Load
+    renderLibrary();
+  </script>
 </body>
 </html>
