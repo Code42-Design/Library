@@ -129,12 +129,31 @@ HTML
       border-radius: 3px 3px 0 0;
     }
 
-    /* Book Spine Visual Styling */
+    /* Book Spine Visual Styling with Cover Image */
+    .spine-image-bg {
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .spine-image-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.85) 100%);
+      z-index: 1;
+    }
+
+    .spine-content {
+      position: relative;
+      z-index: 2;
+    }
+
     .book-spine {
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      box-shadow: -3px 0 8px rgba(0,0,0,0.4), inset 2px 0 4px rgba(255,255,255,0.2);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
 
     /* 3D Flip Card Container */
@@ -306,15 +325,6 @@ HTML
           </div>
         </div>
 
-        <!-- Spine Color Selector -->
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Spine Accent Color</label>
-          <div class="flex items-center gap-3">
-            <input type="color" id="bookSpineColor" value="#3b82f6" class="h-9 w-16 bg-transparent cursor-pointer rounded border border-gray-300">
-            <span class="text-xs text-muted">Customize the color shown on the bookshelf spine view</span>
-          </div>
-        </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Shelf / Status</label>
@@ -443,7 +453,6 @@ HTML
         cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1516211014i/36608072.jpg",
         shelf: "currently-reading",
         rating: 5,
-        spineColor: "#2d6a4f",
         notes: "A beautiful, sprawling ode to trees."
       },
       {
@@ -454,7 +463,6 @@ HTML
         cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1474154022i/3.jpg",
         shelf: "favorites",
         rating: 5,
-        spineColor: "#b91c1c",
         notes: "Classic magic fantasy."
       },
       {
@@ -465,7 +473,6 @@ HTML
         cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg",
         shelf: "completed",
         rating: 5,
-        spineColor: "#d97706",
         notes: "Masterpiece of world-building."
       }
     ];
@@ -532,24 +539,24 @@ HTML
         shelfElem.ondrop = (e) => handleDropOnShelf(e, shelf.id);
 
         let booksHTML = categoryBooks.map(book => {
-          const spineColor = book.spineColor || '#2d6a4f';
+          const coverImg = book.cover || 'https://via.placeholder.com/150x225?text=No+Cover';
           return `
           <!-- Flip Card Container (Perspective) -->
           <div draggable="true" ondragstart="handleDragStart(event, '${book.id}')" class="group relative flex-none w-14 sm:w-16 hover:w-36 sm:hover:w-44 transition-all duration-300 h-56 perspective-1000">
             <div id="card-inner-${book.id}" class="book-card-inner relative w-full h-full duration-500">
               
-              <!-- SPINE VIEW (FRONT BY DEFAULT) -->
-              <div onclick="toggleCardFlip('${book.id}')" class="card-front absolute inset-0 rounded-md overflow-hidden cursor-pointer shadow-2xl flex flex-col justify-between p-2 border-r border-l border-white/20 text-white" style="background-color: ${spineColor};">
-                <div class="text-[10px] uppercase font-bold tracking-widest text-white/70 text-center border-b border-white/20 pb-1">${book.rating ? '★'.repeat(book.rating) : ''}</div>
-                <div class="book-spine flex-1 flex items-center justify-center font-serif-title font-bold text-xs sm:text-sm text-center px-1 tracking-wider uppercase truncate">
+              <!-- SPINE VIEW (FRONT BY DEFAULT) - MATCHES THE COVER IMAGE -->
+              <div onclick="toggleCardFlip('${book.id}')" class="card-front spine-image-bg absolute inset-0 rounded-md overflow-hidden cursor-pointer shadow-2xl flex flex-col justify-between p-2 border-r border-l border-white/20 text-white" style="background-image: url('${coverImg}');">
+                <div class="spine-content text-[10px] uppercase font-bold tracking-widest text-amber-300 text-center border-b border-white/20 pb-1">${book.rating ? '★'.repeat(book.rating) : ''}</div>
+                <div class="spine-content book-spine flex-1 flex items-center justify-center font-serif-title font-bold text-xs sm:text-sm text-center px-1 tracking-wider uppercase truncate text-white drop-shadow-md">
                   ${book.title}
                 </div>
-                <div class="text-[9px] text-white/80 text-center truncate pt-1 border-t border-white/20">${book.author}</div>
+                <div class="spine-content text-[9px] text-gray-200 text-center truncate pt-1 border-t border-white/20">${book.author}</div>
               </div>
 
               <!-- FACE COVER VIEW (BACK AFTER CLICK) -->
               <div class="card-back absolute inset-0 rounded-md overflow-hidden shadow-2xl border border-white/30 bg-gray-900 text-white">
-                <img src="${book.cover || 'https://via.placeholder.com/150x225?text=No+Cover'}" alt="${book.title}" class="w-full h-full object-cover">
+                <img src="${coverImg}" alt="${book.title}" class="w-full h-full object-cover">
                 
                 <div class="absolute inset-0 bg-black/80 opacity-0 hover:opacity-100 transition duration-200 flex flex-col justify-between p-3 text-white">
                   <div>
@@ -822,7 +829,6 @@ HTML
         author: document.getElementById('bookAuthor').value,
         isbn: document.getElementById('bookIsbn').value,
         cover: document.getElementById('bookCover').value || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=400',
-        spineColor: document.getElementById('bookSpineColor').value,
         shelf: document.getElementById('bookShelf').value,
         rating: parseInt(document.getElementById('bookRating').value),
         notes: document.getElementById('bookNotes').value
@@ -847,7 +853,6 @@ HTML
       document.getElementById('bookAuthor').value = book.author;
       document.getElementById('bookIsbn').value = book.isbn || '';
       document.getElementById('bookCover').value = book.cover || '';
-      document.getElementById('bookSpineColor').value = book.spineColor || '#3b82f6';
       document.getElementById('bookShelf').value = book.shelf;
       document.getElementById('bookRating').value = book.rating;
       document.getElementById('bookNotes').value = book.notes || '';
