@@ -93,9 +93,9 @@ HTML
     /* Wooden Bookshelf Styles */
     .wooden-shelf {
       position: relative;
-      margin-bottom: 3.5rem;
-      padding: 1.5rem 1.5rem 0.5rem 1.5rem;
-      background: rgba(0, 0, 0, 0.2);
+      margin-bottom: 2.5rem;
+      padding: 1rem 1rem 0 1rem;
+      background: rgba(0, 0, 0, 0.25);
       border-radius: 8px 8px 0 0;
       transition: background 0.2s ease;
     }
@@ -105,15 +105,20 @@ HTML
       outline: 2px dashed var(--accent-color);
     }
 
+    /* Shelf Wood Ledge with Embedded Name Plate */
     .wooden-shelf-ledge {
       position: relative;
-      height: 24px;
+      min-height: 38px;
       width: calc(100% + 2rem);
       left: -1rem;
       background: linear-gradient(180deg, var(--shelf-wood) 0%, var(--shelf-shadow) 100%);
       border-radius: 4px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.45), inset 0 2px 2px rgba(255,255,255,0.25);
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-between;
+      padding: 0 1.25rem;
     }
 
     .wooden-shelf-ledge::before {
@@ -128,10 +133,16 @@ HTML
       border-radius: 3px 3px 0 0;
     }
 
+    .wood-shelf-label {
+      color: #fef3c7;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 0 0 5px rgba(217, 119, 6, 0.3);
+      letter-spacing: 0.08em;
+    }
+
     /* Realistic 3D Hardcover Book Spine Styles */
     .book-spine-item {
       position: relative;
-      height: 210px;
+      height: 200px;
       width: 44px;
       border-radius: 3px 5px 5px 3px;
       box-shadow: -3px 0 6px rgba(0,0,0,0.4), 3px 0 8px rgba(0,0,0,0.3), inset -2px 0 3px rgba(255,255,255,0.2);
@@ -145,7 +156,6 @@ HTML
       z-index: 20;
     }
 
-    /* Spine Leather Texture & Raised Ridges */
     .book-spine-texture {
       position: absolute;
       inset: 0;
@@ -162,28 +172,15 @@ HTML
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      max-height: 140px;
+      max-height: 130px;
     }
 
-    /* Palette Themes for Cohesive Spines */
+    /* Color Palettes for Hardcover Spines */
     .spine-burgundy { background: linear-gradient(90deg, #4a0e17 0%, #721c24 50%, #4a0e17 100%); color: #f8e3a1; }
     .spine-navy     { background: linear-gradient(90deg, #0f2027 0%, #203a43 50%, #0f2027 100%); color: #e2e8f0; }
     .spine-emerald  { background: linear-gradient(90deg, #062c19 0%, #115e3b 50%, #062c19 100%); color: #fef08a; }
     .spine-amber    { background: linear-gradient(90deg, #451a03 0%, #78350f 50%, #451a03 100%); color: #fde68a; }
     .spine-plum     { background: linear-gradient(90deg, #2e1065 0%, #581c87 50%, #2e1065 100%); color: #f5d0fe; }
-
-    /* 3D Flip Card Container for Viewing Cover */
-    .perspective-1000 { perspective: 1000px; }
-    .book-card-inner {
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      transform-style: preserve-3d;
-    }
-    .book-card-inner.is-flipped { transform: rotateY(180deg); }
-    .card-front, .card-back {
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-    .card-back { transform: rotateY(180deg); }
 
     .botanical-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -202,7 +199,7 @@ HTML
 
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
 
-    <!-- Header -->
+    <!-- Header & Live Stats Bar -->
     <header class="glass-panel rounded-2xl p-4 sm:p-6 mb-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <div class="p-3 rounded-xl bg-emerald-600 text-white shadow-lg">
@@ -214,20 +211,28 @@ HTML
         </div>
       </div>
 
+      <!-- Live Stats & Quick Actions -->
       <div class="flex flex-wrap items-center gap-3">
-        <button onclick="openAddBookModal()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
+        <!-- Live Book Count & Avg Rating Badges -->
+        <div class="flex items-center gap-2 bg-black/10 dark:bg-white/10 px-3 py-2 rounded-xl text-xs font-semibold">
+          <span id="statBookCount" class="text-emerald-700 dark:text-emerald-300"><i class="fa-solid fa-books mr-1"></i>0 Books</span>
+          <span class="text-gray-400">|</span>
+          <span id="statAvgRating" class="text-amber-600 dark:text-amber-300"><i class="fa-solid fa-star mr-1"></i>0.0 Avg</span>
+        </div>
+
+        <button onclick="openAddBookModal()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
           <i class="fa-solid fa-plus"></i> Add Book
         </button>
-        <button onclick="openScannerModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
+        <button onclick="openScannerModal()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
           <i class="fa-solid fa-barcode"></i> Scan ISBN
         </button>
-        <button onclick="openThemeModal()" class="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
-          <i class="fa-solid fa-palette"></i> Wallpaper Themes
+        <button onclick="openThemeModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm transition shadow-md flex items-center gap-2">
+          <i class="fa-solid fa-palette"></i> Themes
         </button>
       </div>
     </header>
 
-    <!-- Controls Toolbar -->
+    <!-- Search & Filter Bar -->
     <div class="glass-panel rounded-2xl p-4 mb-8 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="relative w-full md:w-96">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -244,12 +249,67 @@ HTML
           <option value="title">Title (A-Z)</option>
           <option value="author">Author (A-Z)</option>
         </select>
+        
+        <button onclick="openEditShelvesModal()" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold shadow">
+          <i class="fa-solid fa-gear mr-1"></i> Shelves
+        </button>
       </div>
     </div>
 
     <!-- MAIN SHELVES CONTAINER -->
-    <main id="shelvesContainer" class="space-y-10"></main>
+    <main id="shelvesContainer" class="space-y-8"></main>
 
+  </div>
+
+  <!-- BOOK DETAIL / SYNOPSIS & PAGE TRACKER MODAL -->
+  <div id="bookDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-card max-w-2xl w-full rounded-2xl p-6 shadow-2xl border border-white/30 relative">
+      <button onclick="closeBookDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex flex-col sm:flex-row gap-6 items-start">
+        <img id="detailCover" src="" class="w-36 h-52 object-cover rounded-xl shadow-lg border border-white/20 shrink-0 mx-auto sm:mx-0">
+        
+        <div class="flex-1 w-full">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h2 id="detailTitle" class="text-2xl font-bold font-serif-title leading-tight"></h2>
+              <p id="detailAuthor" class="text-sm font-medium text-emerald-600 dark:text-emerald-400 mt-0.5"></p>
+            </div>
+            <button id="detailEditBtn" onclick="" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow shrink-0 flex items-center gap-1">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
+          </div>
+
+          <div id="detailRating" class="text-amber-400 text-sm my-2"></div>
+
+          <!-- Synopsis / Description -->
+          <div class="my-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Synopsis</h4>
+            <p id="detailSynopsis" class="text-xs leading-relaxed max-h-32 overflow-y-auto pr-1 text-gray-700 dark:text-gray-300">Loading book overview...</p>
+          </div>
+
+          <!-- Interactive Page Tracker -->
+          <div class="bg-black/10 dark:bg-white/10 p-3 rounded-xl border border-white/20 mt-4">
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-2">Reading Progress Page Counter</label>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold">Page</span>
+                <input type="number" id="detailCurrentPage" min="0" onchange="updatePageProgress()" class="w-20 px-2 py-1 text-sm font-bold text-center rounded-lg bg-white border border-gray-300 text-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none">
+                <span class="text-xs font-bold text-muted">of</span>
+                <input type="number" id="detailTotalPages" min="1" placeholder="Total" onchange="updatePageProgress()" class="w-20 px-2 py-1 text-sm font-bold text-center rounded-lg bg-white border border-gray-300 text-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none">
+              </div>
+              <span id="detailPercent" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 ml-auto">0%</span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-300/50 rounded-full h-2 mt-2 overflow-hidden">
+              <div id="detailProgressBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ADD / EDIT BOOK MODAL -->
@@ -286,7 +346,6 @@ HTML
           </div>
         </div>
 
-        <!-- Cover Photo Selection & Camera/Upload -->
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Cover Photo URL or Upload</label>
           <div class="flex gap-2 mb-2">
@@ -298,7 +357,6 @@ HTML
             </label>
           </div>
 
-          <!-- Popular Covers Gallery Grid -->
           <div id="popularCoversContainer" class="hidden bg-black/10 p-3 rounded-xl border border-white/20">
             <div class="flex items-center justify-between mb-2">
               <p class="text-xs text-muted font-medium">Click a top edition cover below:</p>
@@ -308,13 +366,17 @@ HTML
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Shelf / Status</label>
             <select id="bookShelf" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none"></select>
           </div>
           <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Personal Rating</label>
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Total Pages</label>
+            <input type="number" id="bookTotalPages" placeholder="e.g. 350" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Rating</label>
             <select id="bookRating" class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none">
               <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
               <option value="4">⭐⭐⭐⭐ (4/5)</option>
@@ -323,6 +385,11 @@ HTML
               <option value="1">⭐ (1/5)</option>
             </select>
           </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Synopsis / Overview</label>
+          <textarea id="bookSynopsis" rows="2" placeholder="Brief summary of the book..." class="w-full px-3 py-2 rounded-lg bg-white/80 border border-gray-300 text-sm text-gray-900 outline-none"></textarea>
         </div>
 
         <div>
@@ -408,10 +475,10 @@ HTML
 
   <script>
     const defaultShelves = [
-      { id: 'currently-reading', title: 'Currently Reading', icon: 'fa-book-open' },
-      { id: 'want-to-read', title: 'Want to Read', icon: 'fa-bookmark' },
-      { id: 'completed', title: 'Completed', icon: 'fa-circle-check' },
-      { id: 'favorites', title: 'Favorites', icon: 'fa-star' }
+      { id: 'currently-reading', title: 'Currently Reading', icon: 'fa-book-open', collapsed: false },
+      { id: 'want-to-read', title: 'Want to Read', icon: 'fa-bookmark', collapsed: false },
+      { id: 'completed', title: 'Completed', icon: 'fa-circle-check', collapsed: false },
+      { id: 'favorites', title: 'Favorites', icon: 'fa-star', collapsed: false }
     ];
 
     const initialBooks = [
@@ -423,6 +490,9 @@ HTML
         cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1516211014i/36608072.jpg",
         shelf: "currently-reading",
         rating: 5,
+        currentPage: 142,
+        totalPages: 502,
+        synopsis: "An sweeping, impassioned work of popular fiction that tells the story of nine Americans whose unique experiences with trees bring them together to address the destruction of forests.",
         theme: "spine-emerald"
       },
       {
@@ -433,6 +503,9 @@ HTML
         cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1474154022i/3.jpg",
         shelf: "favorites",
         rating: 5,
+        currentPage: 309,
+        totalPages: 309,
+        synopsis: "Harry Potter has never even heard of Hogwarts when the letters start dropping on the doormat at number four, Privet Drive.",
         theme: "spine-burgundy"
       },
       {
@@ -443,12 +516,16 @@ HTML
         cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg",
         shelf: "completed",
         rating: 5,
+        currentPage: 658,
+        totalPages: 658,
+        synopsis: "Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides, heir to a noble family tasked with ruling an inhospitable world.",
         theme: "spine-amber"
       }
     ];
 
     let shelves = JSON.parse(localStorage.getItem('lumina_shelves')) || defaultShelves;
     let books = JSON.parse(localStorage.getItem('lumina_books')) || initialBooks;
+    let activeBookDetail = null;
     let debounceTimer = null;
 
     const spineThemes = ['spine-burgundy', 'spine-navy', 'spine-emerald', 'spine-amber', 'spine-plum'];
@@ -456,6 +533,16 @@ HTML
     function saveState() {
       localStorage.setItem('lumina_shelves', JSON.stringify(shelves));
       localStorage.setItem('lumina_books', JSON.stringify(books));
+      updateGlobalStats();
+    }
+
+    function updateGlobalStats() {
+      const totalBooks = books.length;
+      const totalRating = books.reduce((acc, b) => acc + (parseInt(b.rating) || 0), 0);
+      const avgRating = totalBooks > 0 ? (totalRating / totalBooks).toFixed(1) : "0.0";
+
+      document.getElementById('statBookCount').innerHTML = `<i class="fa-solid fa-book mr-1"></i>${totalBooks} ${totalBooks === 1 ? 'Book' : 'Books'}`;
+      document.getElementById('statAvgRating').innerHTML = `<i class="fa-solid fa-star mr-1"></i>${avgRating} Avg`;
     }
 
     function updateShelfSelectOptions() {
@@ -470,8 +557,18 @@ HTML
       modalSelect.innerHTML = shelves.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
     }
 
+    function toggleShelfCollapse(shelfId) {
+      const shelf = shelves.find(s => s.id === shelfId);
+      if (shelf) {
+        shelf.collapsed = !shelf.collapsed;
+        saveState();
+        renderLibrary();
+      }
+    }
+
     function renderLibrary() {
       updateShelfSelectOptions();
+      updateGlobalStats();
 
       const container = document.getElementById('shelvesContainer');
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -499,7 +596,7 @@ HTML
         if (sortBy === 'author') categoryBooks.sort((a,b) => a.author.localeCompare(b.author));
 
         const shelfElem = document.createElement('section');
-        shelfElem.className = 'wooden-shelf glass-panel rounded-2xl shadow-xl';
+        shelfElem.className = 'wooden-shelf glass-panel rounded-2xl shadow-xl overflow-hidden';
         shelfElem.setAttribute('data-shelf-id', shelf.id);
 
         shelfElem.ondragover = (e) => { e.preventDefault(); shelfElem.classList.add('drag-over'); };
@@ -507,81 +604,107 @@ HTML
         shelfElem.ondrop = (e) => handleDropOnShelf(e, shelf.id);
 
         let booksHTML = categoryBooks.map((book, i) => {
-          const coverImg = book.cover || 'https://via.placeholder.com/150x225?text=No+Cover';
           const themeClass = book.theme || spineThemes[i % spineThemes.length];
 
           return `
-          <!-- Realistic Hardcover Book on Shelf -->
-          <div draggable="true" ondragstart="handleDragStart(event, '${book.id}')" class="group relative flex-none hover:w-44 transition-all duration-300 h-[210px] perspective-1000">
-            <div id="card-inner-${book.id}" class="book-card-inner relative w-full h-full duration-500">
-              
-              <!-- COHESIVE HARDCOVER SPINE -->
-              <div onclick="toggleCardFlip('${book.id}')" class="card-front book-spine-item ${themeClass} flex flex-col justify-between p-2 select-none">
-                <div class="book-spine-texture"></div>
-                <div class="text-[9px] uppercase font-bold tracking-widest text-center border-b border-white/20 pb-1 z-10">
-                  ${book.rating ? '★'.repeat(book.rating) : ''}
-                </div>
-                
-                <div class="book-spine-text font-book-spine font-bold text-xs tracking-wider uppercase text-center my-auto px-1 z-10">
-                  ${book.title}
-                </div>
+          <!-- Cohesive Hardcover Book Spine -->
+          <div draggable="true" ondragstart="handleDragStart(event, '${book.id}')" onclick="openBookDetailModal('${book.id}')" class="book-spine-item ${themeClass} flex-none flex flex-col justify-between p-2 select-none">
+            <div class="book-spine-texture"></div>
+            <div class="text-[9px] uppercase font-bold tracking-widest text-center border-b border-white/20 pb-1 z-10">
+              ${book.rating ? '★'.repeat(book.rating) : ''}
+            </div>
+            
+            <div class="book-spine-text font-book-spine font-bold text-xs tracking-wider uppercase text-center my-auto px-1 z-10">
+              ${book.title}
+            </div>
 
-                <div class="text-[8px] text-center truncate pt-1 border-t border-white/20 z-10 opacity-90">
-                  ${book.author}
-                </div>
-              </div>
-
-              <!-- ACTUAL FACE COVER VIEW (ON FLIP) -->
-              <div class="card-back absolute inset-0 rounded-md overflow-hidden shadow-2xl border border-white/30 bg-gray-900 text-white w-36 sm:w-40">
-                <img src="${coverImg}" alt="${book.title}" class="w-full h-full object-cover">
-                
-                <div class="absolute inset-0 bg-black/80 opacity-0 hover:opacity-100 transition duration-200 flex flex-col justify-between p-3 text-white">
-                  <div>
-                    <button onclick="toggleCardFlip('${book.id}')" class="text-[10px] bg-white/20 px-2 py-0.5 rounded text-amber-300 mb-1"><i class="fa-solid fa-rotate-left"></i> Spine</button>
-                    <h4 class="font-bold text-xs line-clamp-2">${book.title}</h4>
-                    <p class="text-[10px] text-gray-300 mt-1">${book.author}</p>
-                  </div>
-                  <div class="flex justify-between items-center pt-2 border-t border-white/20">
-                    <button onclick="editBook('${book.id}')" class="text-xs text-emerald-400 hover:text-emerald-300"><i class="fa-solid fa-pen"></i> Edit</button>
-                    <button onclick="deleteBook('${book.id}')" class="text-xs text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
-                  </div>
-                </div>
-              </div>
-
+            <div class="text-[8px] text-center truncate pt-1 border-t border-white/20 z-10 opacity-90">
+              ${book.author}
             </div>
           </div>
         `}).join('');
 
         if (categoryBooks.length === 0) {
-          booksHTML = `<p class="text-xs text-muted italic py-10 px-4">Drag books here or click "Add Book"</p>`;
+          booksHTML = `<p class="text-xs text-muted italic py-8 px-4">Drag books here or click "Add Book"</p>`;
         }
 
-        shelfElem.innerHTML = `
-          <div class="flex items-center justify-between gap-2 mb-4 border-b border-gray-500/20 pb-2">
-            <div class="flex items-center gap-2">
-              <i class="fa-solid ${shelf.icon || 'fa-book'} text-emerald-500"></i>
-              <h3 class="text-lg font-bold font-serif-title">${shelf.title}</h3>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 font-semibold ml-2">${categoryBooks.length}</span>
-            </div>
-            <button onclick="openEditShelvesModal()" class="text-xs text-muted hover:text-emerald-600 font-medium flex items-center gap-1">
-              <i class="fa-solid fa-gear"></i> Edit Shelves
-            </button>
-          </div>
+        const isCollapsed = shelf.collapsed;
 
-          <div class="flex gap-4 overflow-x-auto pb-4 pt-2 px-2 items-end min-h-[230px]">
+        shelfElem.innerHTML = `
+          <!-- Collapsible Book Area -->
+          <div class="${isCollapsed ? 'hidden' : 'flex'} gap-4 overflow-x-auto pb-3 pt-2 px-2 items-end min-h-[210px] transition-all">
             ${booksHTML}
           </div>
 
-          <div class="wooden-shelf-ledge"></div>
+          <!-- Wooden Shelf Ledge with Name Embossed directly on Wood -->
+          <div class="wooden-shelf-ledge">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid ${shelf.icon || 'fa-book'} text-amber-300 text-sm"></i>
+              <span class="wood-shelf-label font-serif-title font-bold text-sm uppercase">${shelf.title}</span>
+              <span class="text-[10px] bg-black/40 text-amber-200 px-2 py-0.5 rounded-full font-bold">${categoryBooks.length}</span>
+            </div>
+
+            <button onclick="toggleShelfCollapse('${shelf.id}')" class="text-amber-200 hover:text-white text-sm font-bold transition flex items-center gap-1">
+              <span class="text-[10px] uppercase font-semibold hidden sm:inline">${isCollapsed ? 'Expand' : 'Collapse'}</span>
+              <i class="fa-solid ${isCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'}"></i>
+            </button>
+          </div>
         `;
 
         container.appendChild(shelfElem);
       });
     }
 
-    function toggleCardFlip(bookId) {
-      const cardInner = document.getElementById(`card-inner-${bookId}`);
-      if (cardInner) cardInner.classList.toggle('is-flipped');
+    // Detail Modal (Synopsis & Page Counter)
+    function openBookDetailModal(bookId) {
+      const book = books.find(b => b.id === bookId);
+      if (!book) return;
+
+      activeBookDetail = book;
+      document.getElementById('detailCover').src = book.cover || 'https://via.placeholder.com/150x225?text=No+Cover';
+      document.getElementById('detailTitle').textContent = book.title;
+      document.getElementById('detailAuthor').textContent = `by ${book.author}`;
+      document.getElementById('detailRating').innerHTML = '★'.repeat(book.rating || 5) + ` (${book.rating || 5}/5)`;
+      document.getElementById('detailSynopsis').textContent = book.synopsis || "No synopsis available for this volume.";
+      
+      document.getElementById('detailCurrentPage').value = book.currentPage || 0;
+      document.getElementById('detailTotalPages').value = book.totalPages || 0;
+      
+      document.getElementById('detailEditBtn').onclick = () => {
+        closeBookDetailModal();
+        editBook(book.id);
+      };
+
+      updatePageProgressDisplay();
+      document.getElementById('bookDetailModal').classList.remove('hidden');
+    }
+
+    function closeBookDetailModal() {
+      document.getElementById('bookDetailModal').classList.add('hidden');
+      activeBookDetail = null;
+    }
+
+    function updatePageProgress() {
+      if (!activeBookDetail) return;
+      const cur = parseInt(document.getElementById('detailCurrentPage').value) || 0;
+      const tot = parseInt(document.getElementById('detailTotalPages').value) || 0;
+
+      activeBookDetail.currentPage = cur;
+      activeBookDetail.totalPages = tot;
+
+      saveState();
+      updatePageProgressDisplay();
+    }
+
+    function updatePageProgressDisplay() {
+      const cur = parseInt(document.getElementById('detailCurrentPage').value) || 0;
+      const tot = parseInt(document.getElementById('detailTotalPages').value) || 0;
+
+      let pct = 0;
+      if (tot > 0) pct = Math.min(100, Math.round((cur / tot) * 100));
+
+      document.getElementById('detailPercent').textContent = `${pct}%`;
+      document.getElementById('detailProgressBar').style.width = `${pct}%`;
     }
 
     function handleDragStart(e, bookId) {
@@ -603,7 +726,7 @@ HTML
       }
     }
 
-    // Live Title Auto-Suggest Dropdown
+    // Auto-Suggest Dropdown
     function handleTitleInput(val) {
       clearTimeout(debounceTimer);
       const suggestionsBox = document.getElementById('titleSuggestions');
@@ -655,7 +778,7 @@ HTML
       fetchPopularCovers();
     }
 
-    // Popular Covers Selector Gallery
+    // Popular Covers Selector
     async function fetchPopularCovers() {
       const title = document.getElementById('bookTitle').value.trim();
       const author = document.getElementById('bookAuthor').value.trim();
@@ -703,7 +826,6 @@ HTML
       document.getElementById('popularCoversContainer').classList.add('hidden');
     }
 
-    // Camera / Photo Upload Handler with Image Search Fallback
     function handlePhotoCapture(event) {
       const file = event.target.files[0];
       if (file) {
@@ -715,7 +837,7 @@ HTML
       }
     }
 
-    // Shelves Management
+    // Edit Shelves Logic
     function openEditShelvesModal() {
       renderShelvesList();
       document.getElementById('editShelvesModal').classList.remove('hidden');
@@ -748,7 +870,7 @@ HTML
       if (!title) return;
 
       const id = title.toLowerCase().replace(/\s+/g, '-');
-      shelves.push({ id, title, icon: 'fa-layer-group' });
+      shelves.push({ id, title, icon: 'fa-layer-group', collapsed: false });
       input.value = '';
       saveState();
       renderShelvesList();
@@ -791,7 +913,10 @@ HTML
         isbn: document.getElementById('bookIsbn').value,
         cover: document.getElementById('bookCover').value || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=400',
         shelf: document.getElementById('bookShelf').value,
+        totalPages: parseInt(document.getElementById('bookTotalPages').value) || 0,
+        currentPage: 0,
         rating: parseInt(document.getElementById('bookRating').value),
+        synopsis: document.getElementById('bookSynopsis').value,
         notes: document.getElementById('bookNotes').value,
         theme: theme
       };
@@ -816,19 +941,13 @@ HTML
       document.getElementById('bookIsbn').value = book.isbn || '';
       document.getElementById('bookCover').value = book.cover || '';
       document.getElementById('bookShelf').value = book.shelf;
+      document.getElementById('bookTotalPages').value = book.totalPages || '';
       document.getElementById('bookRating').value = book.rating;
+      document.getElementById('bookSynopsis').value = book.synopsis || '';
       document.getElementById('bookNotes').value = book.notes || '';
 
       document.getElementById('modalTitle').textContent = 'Edit Volume';
       document.getElementById('addBookModal').classList.remove('hidden');
-    }
-
-    function deleteBook(id) {
-      if (confirm('Delete this volume?')) {
-        books = books.filter(b => b.id !== id);
-        saveState();
-        renderLibrary();
-      }
     }
 
     function openThemeModal() { document.getElementById('themeModal').classList.remove('hidden'); }
